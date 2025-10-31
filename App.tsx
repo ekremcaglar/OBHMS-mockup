@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import FleetOverview from './components/FleetOverview';
 import AircraftDetailView from './components/AircraftDetailView';
+import ChartBuilder from './components/ChartBuilder';
 import { MOCK_FLEET_DATA } from './constants';
 
 const App: React.FC = () => {
@@ -27,15 +28,16 @@ const App: React.FC = () => {
 
     switch (currentPage) {
         case 'Home':
-            return <Home />;
+            return <Home setCurrentPage={setCurrentPage} />;
         case 'Fleet Status':
             return <FleetOverview onAircraftSelect={setSelectedAircraftId} />;
+        case 'Chart Builder':
+            return <ChartBuilder />;
         // Add cases for other pages here
         case 'Dashboards':
-        case 'Chart Builder':
         case 'Administration':
         default:
-            return <Home />; // Default to Home for now
+            return <Home setCurrentPage={setCurrentPage} />; // Default to Home for now
     }
   };
 

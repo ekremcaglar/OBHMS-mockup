@@ -1,21 +1,27 @@
 import React from 'react';
 import Icon from './Icon';
 
-const ShortcutCard = ({ icon, label }: { icon: string, label: string }) => (
-    <div className="bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center space-y-3 transition-colors cursor-pointer">
+interface ShortcutCardProps {
+    icon: string;
+    label: string;
+    onClick?: () => void;
+}
+
+const ShortcutCard: React.FC<ShortcutCardProps> = ({ icon, label, onClick }) => (
+    <div onClick={onClick} className="bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center space-y-3 transition-colors cursor-pointer">
         <Icon name={icon} className="w-8 h-8 text-sky-400" />
         <span className="text-white font-medium">{label}</span>
     </div>
 );
 
-// Fix: Define prop types with an interface to resolve 'children' property missing error.
+// Fix: Explicitly type component as React.FC to resolve issue with children prop typing.
 interface AnnouncementCardProps {
     title: string;
     date: string;
     children: React.ReactNode;
 }
 
-const AnnouncementCard = ({ title, date, children }: AnnouncementCardProps) => (
+const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ title, date, children }) => (
     <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
         <div className="flex justify-between items-baseline mb-1">
             <h4 className="font-semibold text-sky-400">{title}</h4>
@@ -27,7 +33,7 @@ const AnnouncementCard = ({ title, date, children }: AnnouncementCardProps) => (
     </div>
 );
 
-// Fix: Define prop types with an interface to resolve 'children' property missing error.
+// Fix: Explicitly type component as React.FC to resolve issue with children prop typing.
 interface NewsCardProps {
     title: string;
     source: string;
@@ -35,7 +41,7 @@ interface NewsCardProps {
     children: React.ReactNode;
 }
 
-const NewsCard = ({ title, source, date, children }: NewsCardProps) => (
+const NewsCard: React.FC<NewsCardProps> = ({ title, source, date, children }) => (
      <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
         <div className="flex justify-between items-start mb-2">
             <div>
@@ -50,8 +56,11 @@ const NewsCard = ({ title, source, date, children }: NewsCardProps) => (
     </div>
 );
 
+interface HomeProps {
+    setCurrentPage: (page: string) => void;
+}
 
-const Home: React.FC = () => {
+const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
     return (
         <div className="space-y-12">
             <section className="text-center pt-8">
@@ -74,10 +83,10 @@ const Home: React.FC = () => {
             <section>
                 <h2 className="text-xl font-semibold text-white mb-4">Shortcuts</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <ShortcutCard icon="Plane" label="Fleet Status" />
-                    <ShortcutCard icon="LayoutGrid" label="Dashboards" />
-                    <ShortcutCard icon="BarChart3" label="Chart Builder" />
-                    <ShortcutCard icon="Settings" label="Administration" />
+                    <ShortcutCard icon="Plane" label="Fleet Status" onClick={() => setCurrentPage('Fleet Status')} />
+                    <ShortcutCard icon="LayoutGrid" label="Dashboards" onClick={() => setCurrentPage('Dashboards')} />
+                    <ShortcutCard icon="BarChart3" label="Chart Builder" onClick={() => setCurrentPage('Chart Builder')} />
+                    <ShortcutCard icon="Settings" label="Administration" onClick={() => setCurrentPage('Administration')} />
                 </div>
             </section>
 
