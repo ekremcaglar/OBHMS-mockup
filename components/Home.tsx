@@ -1,124 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ANNOUNCEMENTS_DATA, NEWS_DATA, SHORTCUTS_DATA, MOCK_FLEET_DATA } from '../constants';
 import Icon from './Icon';
-
-interface ShortcutCardProps {
-    icon: string;
-    label: string;
-    onClick?: () => void;
-}
-
-const ShortcutCard: React.FC<ShortcutCardProps> = ({ icon, label, onClick }) => (
-    <div onClick={onClick} className="bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center space-y-3 transition-colors cursor-pointer">
-        <Icon name={icon} className="w-8 h-8 text-sky-400" />
-        <span className="text-white font-medium">{label}</span>
-    </div>
-);
-
-// Fix: Explicitly type component as React.FC to resolve issue with children prop typing.
-interface AnnouncementCardProps {
-    title: string;
-    date: string;
-    children: React.ReactNode;
-}
-
-const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ title, date, children }) => (
-    <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
-        <div className="flex justify-between items-baseline mb-1">
-            <h4 className="font-semibold text-sky-400">{title}</h4>
-            <span className="text-xs text-gray-500">{date}</span>
-        </div>
-        <p className="text-sm text-gray-400">
-            {children}
-        </p>
-    </div>
-);
-
-// Fix: Explicitly type component as React.FC to resolve issue with children prop typing.
-interface NewsCardProps {
-    title: string;
-    source: string;
-    date: string;
-    children: React.ReactNode;
-}
-
-const NewsCard: React.FC<NewsCardProps> = ({ title, source, date, children }) => (
-     <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
-        <div className="flex justify-between items-start mb-2">
-            <div>
-                <h4 className="font-semibold text-white">{title}</h4>
-                <p className="text-xs text-gray-500">{source}</p>
-            </div>
-            <span className="text-xs text-gray-500 flex-shrink-0 ml-4">{date}</span>
-        </div>
-        <p className="text-sm text-gray-400">
-            {children}
-        </p>
-    </div>
-);
+import AnnouncementCard from './home/AnnouncementCard';
+import NewsCard from './home/NewsCard';
+import ShortcutCard from './home/ShortcutCard';
+import MetricCard from './MetricCard';
+import WatchlistAircraft from './home/WatchlistAircraft';
+import { useI18n } from '../context/I18nContext';
+import { Shortcut } from '../types';
 
 interface HomeProps {
     setCurrentPage: (page: string) => void;
+    onSearchSubmit: (query: string) => void;
+    onAircraftSelect: (id: string) => void;
 }
 
-const Home: React.FC<HomeProps> = ({ setCurrentPage }) => {
+const Home: React.FC<HomeProps> = ({ setCurrentPage, onSearchSubmit, onAircraftSelect }) => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const { t } = useI18n();
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSearchSubmit(searchQuery);
+    };
+    
+    const getShortcutTitle = (shortcut: Shortcut) => {
+        const key = shortcut.title.toLowerCase().replace(/\s+/g, '_') as keyof ReturnType<typeof useI18n>['t'];
+        return t(key) || shortcut.title;
+    }
+    
+    const keyMetrics = [
+      MOCK_FLEET_DATA.missionCapableRate,
+      MOCK_FLEET_DATA.fleetAvailability,
+      MOCK_FLEET_DATA.nffRate,
+      MOCK_FLEET_DATA.aogEvents,
+      MOCK_FLEET_DATA.rulExpirationForecast,
+    ];
+
     return (
         <div className="space-y-12">
-            <section className="text-center pt-8">
-                <h1 className="text-4xl md:text-5xl font-bold text-white">Welcome, Commander</h1>
-                <p className="mt-2 text-lg text-gray-400">Your central hub for predictive, actionable intelligence.</p>
-                <div className="mt-8 max-w-2xl mx-auto">
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Icon name="Search" className="w-5 h-5 text-gray-500" />
+            {/* Header section */}
+            <div className="text-center">
+                <img src="/assets/logo.svg" alt="TUSAŞ Logo" className="mx-auto h-16 mb-6 dark:invert" />
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl mb-4">{t('obhms_title')}</h1>
+                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{t('obhms_subtitle')}</p>
+                <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto flex rounded-full shadow-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 focus-within:ring-2 focus-within:ring-sky-500 transition-all">
+                    <div className="relative flex-grow">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-6">
+                            <Icon name="Search" className="h-5 w-5 text-gray-400" />
                         </div>
                         <input
-                            type="search"
-                            placeholder="Search for aircraft tail number, fault codes, or components..."
-                            className="w-full bg-slate-800/80 border border-slate-700 rounded-full py-3 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="block w-full rounded-full border-0 bg-transparent py-4 pl-14 pr-6 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder={t('search_placeholder')}
                         />
                     </div>
-                </div>
-            </section>
+                    <button
+                        type="submit"
+                        className="m-1.5 ml-0 inline-flex items-center gap-x-2 rounded-full px-6 py-2.5 text-sm font-semibold text-white bg-sky-600 hover:bg-sky-500 focus:z-10 transition-colors"
+                    >
+                        {t('search')}
+                    </button>
+                </form>
+            </div>
 
-            <section>
-                <h2 className="text-xl font-semibold text-white mb-4">Shortcuts</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <ShortcutCard icon="Plane" label="Fleet Status" onClick={() => setCurrentPage('Fleet Status')} />
-                    <ShortcutCard icon="LayoutGrid" label="Dashboards" onClick={() => setCurrentPage('Dashboards')} />
-                    <ShortcutCard icon="BarChart3" label="Chart Builder" onClick={() => setCurrentPage('Chart Builder')} />
-                    <ShortcutCard icon="Settings" label="Administration" onClick={() => setCurrentPage('Administration')} />
-                </div>
-            </section>
+            {/* Key Metrics */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                {keyMetrics.map(metric => <MetricCard key={metric.id} metric={metric} />)}
+            </div>
 
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-10">
-                <div>
-                    <h2 className="text-xl font-semibold text-white mb-4">Announcements</h2>
-                    <div className="space-y-4">
-                        <AnnouncementCard title="OBHMS v2.1 Deployed" date="2023-10-26">
-                            Version 2.1 is now live, featuring the new Chart Builder module and enhanced AI summary capabilities.
-                        </AnnouncementCard>
-                        <AnnouncementCard title="Scheduled Maintenance" date="2023-10-24">
-                            The system will be offline for scheduled maintenance on Sunday from 0200 to 0400 Zulu.
-                        </AnnouncementCard>
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <h2 className="text-2xl font-bold text-white mb-4">{t('aircraft_watchlist')}</h2>
+                    <WatchlistAircraft onAircraftSelect={onAircraftSelect} />
+                </div>
+                
+                <div className="lg:col-span-1">
+                    <h2 className="text-2xl font-bold text-white mb-4">{t('intel_and_comms')}</h2>
+                    <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 -mr-2">
+                        {ANNOUNCEMENTS_DATA.map(ann => (
+                           <AnnouncementCard key={ann.id} title={ann.title} date={ann.date}>
+                               {ann.content}
+                           </AnnouncementCard>
+                       ))}
+                       {NEWS_DATA.map(news => (
+                            <NewsCard key={news.id} title={news.title} source={news.source} date={news.date}>
+                                {news.content}
+                            </NewsCard>
+                        ))}
                     </div>
                 </div>
-                 <div>
-                    <h2 className="text-xl font-semibold text-white mb-4">Fleet & Industry News</h2>
-                    <div className="space-y-4">
-                       <NewsCard title="New Predictive Maintenance Algorithm Rolled Out for Propulsion Systems" source="Engineering Command" date="2023-10-25">
-                            A new ML model is improving RUL accuracy for turbine blades by 15%.
-                        </NewsCard>
-                         <NewsCard title="Global Supply Chain Delays Affecting Landing Gear Components" source="Logistics Weekly" date="2023-10-22">
-                            Expect extended lead times for specific hydraulic actuators. Plan maintenance accordingly.
-                        </NewsCard>
-                    </div>
+            </div>
+
+            {/* Quick Access */}
+            <div>
+                 <h2 className="text-2xl font-bold text-white mb-4">{t('quick_access')}</h2>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    {SHORTCUTS_DATA.map(shortcut => (
+                        <ShortcutCard 
+                            key={shortcut.id}
+                            icon={shortcut.icon}
+                            label={getShortcutTitle(shortcut)}
+                            onClick={() => setCurrentPage(shortcut.targetApp)}
+                        />
+                    ))}
                 </div>
-            </section>
-            
-            <div className="fixed bottom-6 right-6">
-                <button className="bg-sky-500 hover:bg-sky-600 text-white rounded-full p-4 shadow-lg transition-colors">
-                    <Icon name="MessageSquare" className="w-6 h-6" />
-                </button>
             </div>
         </div>
     );

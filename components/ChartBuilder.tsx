@@ -1,129 +1,252 @@
-import React, { useState, useEffect } from 'react';
-import Icon from './Icon';
-import { FAULTS_BY_SYSTEM, SHI_TREND_DATA } from '../constants';
-import { BarChart, LineChart, Bar, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
-
-const dataSources = {
-  faults: { name: 'Faults by System', data: FAULTS_BY_SYSTEM },
-  shi: { name: 'SHI Trend', data: SHI_TREND_DATA },
-};
+import React, { useState, useMemo } from 'react';
+import { ChartConfig } from '../types';
+import { INITIAL_CHARTS, CHART_DATA_SOURCES, MOCK_CHART_DATA } from '../constants';
+import { Plus, Trash2, Edit3, Save, X } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import FormSelect from './forms/FormSelect';
+import { useI18n } from '../context/I18nContext';
 
 const ChartBuilder: React.FC = () => {
-  const [chartType, setChartType] = useState('bar');
-  const [dataSourceKey, setDataSourceKey] = useState('faults');
-  const [xAxisKey, setXAxisKey] = useState('');
-  const [yAxisKey, setYAxisKey] = useState('');
-  const [generatedChart, setGeneratedChart] = useState<any>(null);
+    const [charts, setCharts] = useState<ChartConfig[]>(INITIAL_CHARTS);
+    const [activeChartId, setActiveChartId] = useState<string | null>(INITIAL_CHARTS[0]?.id || null);
+    const [editingChartId, setEditingChartId] = useState<string | null>(null);
+    const [editingChartName, setEditingChartName] = useState('');
+    const { t } = useI18n();
+    
+    const activeChart = useMemo(() => charts.find(c => c.id === activeChartId), [charts, activeChartId]);
+    
+    const [tempConfig, setTempConfig] = useState<ChartConfig | null>(activeChart || null);
 
-  const currentData = dataSources[dataSourceKey as keyof typeof dataSources].data;
-  const dataKeys = currentData.length > 0 ? Object.keys(currentData[0]) : [];
+    React.useEffect(() => {
+        setTempConfig(activeChart || null);
+    }, [activeChart]);
 
-  useEffect(() => {
-    const defaultKeys = dataSources[dataSourceKey as keyof typeof dataSources].data.length > 0 ? Object.keys(dataSources[dataSourceKey as keyof typeof dataSources].data[0]) : [];
-    setXAxisKey(defaultKeys[0] || '');
-    setYAxisKey(defaultKeys[1] || '');
-    setGeneratedChart(null); // Reset chart on data source change
-  }, [dataSourceKey]);
+    const handleCreateChart = () => {
+        const newId = `chart-${Date.now()}`;
+        const newChart: ChartConfig = {
+            id: newId,
+            name: `${t('new_chart')} ${charts.length + 1}`,
+            dataSourceId: null,
+            chartType: 'bar',
+            xAxisField: null,
+            yAxisField: null,
+        };
+        setCharts([...charts, newChart]);
+        setActiveChartId(newId);
+    };
 
-  const handleGenerateChart = () => {
-    setGeneratedChart({
-      type: chartType,
-      data: currentData,
-      xKey: xAxisKey,
-      yKey: yAxisKey,
-      fill: '#3b82f6', // Example color
-    });
-  };
-  
-  const renderGeneratedChart = () => {
-    if (!generatedChart) {
-      return (
-        <div className="flex flex-col items-center justify-center h-full text-gray-500">
-          <Icon name="BarChart3" className="w-24 h-24 mb-4" />
-          <h3 className="text-xl font-semibold">Chart Preview</h3>
-          <p>Configure your chart options and click "Generate Chart".</p>
-        </div>
-      );
-    }
+    const handleDeleteChart = (id: string) => {
+        const newCharts = charts.filter(c => c.id !== id);
+        setCharts(newCharts);
+        if (activeChartId === id) {
+            const newActiveId = newCharts.length > 0 ? newCharts[0].id : null;
+            setActiveChartId(newActiveId);
+        }
+    };
 
-    const { type, data, xKey, yKey, fill } = generatedChart;
+    const handleStartEdit = (chart: ChartConfig) => {
+        setEditingChartId(chart.id);
+        setEditingChartName(chart.name);
+    };
+    
+    const handleSaveEdit = (id: string) => {
+        setCharts(charts.map(c => (c.id === id ? { ...c, name: editingChartName } : c)));
+        setEditingChartId(null);
+    };
 
-    const ChartTooltip = () => (
-      <Tooltip
-        cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
-        contentStyle={{
-          background: '#1f2937',
-          borderColor: '#374151',
-          borderRadius: '0.5rem',
-        }}
-      />
-    );
+    const handleCancelEdit = () => {
+        setEditingChartId(null);
+    };
+
+    const handleConfigChange = (field: keyof ChartConfig, value: any) => {
+        if (!tempConfig) return;
+        
+        let newConfig = { ...tempConfig, [field]: value };
+        
+        if (field === 'dataSourceId') {
+            newConfig.xAxisField = null;
+            newConfig.yAxisField = null;
+        }
+        
+        setTempConfig(newConfig);
+    };
+    
+    const handleSaveConfig = () => {
+        if (!tempConfig) return;
+        setCharts(charts.map(c => c.id === tempConfig.id ? tempConfig : c));
+    };
+
+    const activeDataSource = CHART_DATA_SOURCES.find(ds => ds.id === tempConfig?.dataSourceId);
+    const chartData = tempConfig?.dataSourceId ? MOCK_CHART_DATA[tempConfig.dataSourceId] : [];
+
+    const renderChartPreview = () => {
+        if (!tempConfig || !tempConfig.dataSourceId || !tempConfig.xAxisField || !tempConfig.yAxisField) {
+            return <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-500">{t('configure_chart_to_see_preview')}</div>;
+        }
+
+        const commonProps = {
+            data: chartData,
+            margin: { top: 5, right: 20, left: 0, bottom: 5 },
+        };
+        
+        const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088fe'];
+        const tickColor = document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280';
+        const gridColor = document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb';
+        const tooltipStyle = {
+            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+            borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
+        };
+
+        return (
+            <ResponsiveContainer width="100%" height="100%">
+                {tempConfig.chartType === 'bar' && (
+                    <BarChart {...commonProps}>
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                        <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                        <YAxis stroke={tickColor} fontSize={12} />
+                        <Tooltip contentStyle={tooltipStyle} />
+                        <Legend />
+                        <Bar dataKey={tempConfig.yAxisField} fill={tempConfig.color || '#8884d8'} />
+                    </BarChart>
+                )}
+                {tempConfig.chartType === 'line' && (
+                     <LineChart {...commonProps}>
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                        <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                        <YAxis stroke={tickColor} fontSize={12} />
+                        <Tooltip contentStyle={tooltipStyle} />
+                        <Legend />
+                        <Line type="monotone" dataKey={tempConfig.yAxisField} stroke={tempConfig.color || '#82ca9d'} />
+                    </LineChart>
+                )}
+                 {tempConfig.chartType === 'scatter' && (
+                     <ScatterChart {...commonProps}>
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                        <XAxis type="category" dataKey={tempConfig.xAxisField} name={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                        <YAxis type="number" dataKey={tempConfig.yAxisField} name={tempConfig.yAxisField} stroke={tickColor} fontSize={12} />
+                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={tooltipStyle} />
+                        <Scatter name="Data" dataKey={tempConfig.yAxisField} fill={tempConfig.color || '#ffc658'} />
+                    </ScatterChart>
+                )}
+                 {tempConfig.chartType === 'pie' && (
+                    <PieChart>
+                        <Pie data={chartData} dataKey={tempConfig.yAxisField} nameKey={tempConfig.xAxisField} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
+                             {chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                        </Pie>
+                        <Tooltip contentStyle={tooltipStyle}/>
+                        <Legend />
+                    </PieChart>
+                )}
+            </ResponsiveContainer>
+        );
+    };
 
     return (
-      <ResponsiveContainer width="100%" height="100%">
-        {type === 'bar' ? (
-          <BarChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis dataKey={xKey} stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-            <ChartTooltip />
-            <Legend wrapperStyle={{fontSize: "12px"}}/>
-            <Bar dataKey={yKey} name={yKey.charAt(0).toUpperCase() + yKey.slice(1)} fill={fill} radius={[4, 4, 0, 0]} />
-          </BarChart>
-        ) : (
-          <LineChart data={data} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis dataKey={xKey} stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis domain={['auto', 'auto']} stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-            <ChartTooltip />
-            <Legend wrapperStyle={{fontSize: "12px"}}/>
-            <Line type="monotone" dataKey={yKey} name={yKey.charAt(0).toUpperCase() + yKey.slice(1)} stroke={fill} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-          </LineChart>
-        )}
-      </ResponsiveContainer>
-    );
-  };
-  
-  const FormSelect: React.FC<{label: string, value: string, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, children: React.ReactNode}> = ({label, value, onChange, children}) => (
-      <div>
-        <label className="block text-sm font-medium text-gray-400 mb-2">{label}</label>
-        <select value={value} onChange={onChange} className="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-sky-500">
-            {children}
-        </select>
-      </div>
-  );
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-10rem)]">
+            <aside className="lg:col-span-3 bg-white dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl p-4 flex flex-col">
+                 <h2 className="text-base font-semibold text-gray-800 dark:text-white mb-4 px-2">{t('my_charts')}</h2>
+                 <div className="flex-grow space-y-2 overflow-y-auto pr-2">
+                    {charts.map(chart => (
+                        <div key={chart.id} className={`group w-full text-left p-3 rounded-md transition-colors flex items-center justify-between ${activeChartId === chart.id ? 'bg-sky-600/20 dark:bg-cyan-600/50' : 'hover:bg-gray-100 dark:hover:bg-slate-700/50'}`}>
+                           {editingChartId === chart.id ? (
+                                <input
+                                    type="text"
+                                    value={editingChartName}
+                                    onChange={(e) => setEditingChartName(e.target.value)}
+                                    className="bg-gray-200 dark:bg-slate-900 text-gray-800 dark:text-white w-full text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-sky-500 rounded-sm px-1"
+                                    autoFocus
+                                />
+                            ) : (
+                                <button onClick={() => setActiveChartId(chart.id)} className="flex-grow text-left text-sm font-semibold text-gray-800 dark:text-white truncate">
+                                    {chart.name}
+                                </button>
+                            )}
+                             <div className="flex items-center space-x-1 flex-shrink-0">
+                                {editingChartId === chart.id ? (
+                                    <>
+                                        <button onClick={() => handleSaveEdit(chart.id)} className="p-1 rounded hover:bg-gray-200 dark:hover:bg-slate-600"><Save className="w-4 h-4 text-green-500" /></button>
+                                        <button onClick={handleCancelEdit} className="p-1 rounded hover:bg-gray-200 dark:hover:bg-slate-600"><X className="w-4 h-4 text-gray-500" /></button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button onClick={() => handleStartEdit(chart)} className="p-1 rounded hover:bg-gray-200 dark:hover:bg-slate-600 opacity-0 group-hover:opacity-100"><Edit3 className="w-4 h-4 text-yellow-500" /></button>
+                                        <button onClick={() => handleDeleteChart(chart.id)} className="p-1 rounded hover:bg-gray-200 dark:hover:bg-slate-600 opacity-0 group-hover:opacity-100"><Trash2 className="w-4 h-4 text-red-500" /></button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button onClick={handleCreateChart} className="w-full flex items-center justify-center space-x-2 text-sm font-semibold py-2 px-4 rounded-lg transition-colors bg-gray-200 hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200">
+                        <Plus className="w-4 h-4" />
+                        <span>{t('new_chart')}</span>
+                    </button>
+                </div>
+            </aside>
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-10rem)]">
-      <div className="lg:col-span-1 bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 shadow-lg backdrop-blur-sm flex flex-col">
-        <h2 className="text-2xl font-bold text-white mb-6">Chart Builder</h2>
-        <div className="space-y-6 flex-grow">
-          <FormSelect label="Chart Type" value={chartType} onChange={(e) => setChartType(e.target.value)}>
-            <option value="bar">Bar Chart</option>
-            <option value="line">Line Chart</option>
-          </FormSelect>
-          <FormSelect label="Data Source" value={dataSourceKey} onChange={(e) => setDataSourceKey(e.target.value)}>
-            {Object.entries(dataSources).map(([key, { name }]) => (
-              <option key={key} value={key}>{name}</option>
-            ))}
-          </FormSelect>
-           <FormSelect label="X-Axis" value={xAxisKey} onChange={(e) => setXAxisKey(e.target.value)}>
-            {dataKeys.map(key => <option key={key} value={key}>{key}</option>)}
-          </FormSelect>
-           <FormSelect label="Y-Axis" value={yAxisKey} onChange={(e) => setYAxisKey(e.target.value)}>
-            {dataKeys.map(key => <option key={key} value={key}>{key}</option>)}
-          </FormSelect>
+            <main className="lg:col-span-9 bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl shadow-lg backdrop-blur-sm flex">
+                <div className="w-1/3 border-r border-gray-200 dark:border-gray-700/50 p-6 overflow-y-auto">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">{t('chart_configuration')}</h2>
+                    {tempConfig ? (
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{t('chart_name')}</label>
+                                <input
+                                    type="text"
+                                    value={tempConfig.name}
+                                    onChange={(e) => handleConfigChange('name', e.target.value)}
+                                    className="w-full bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md py-2 px-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                                />
+                            </div>
+                            <FormSelect label={t('chart_type')} value={tempConfig.chartType} onChange={e => handleConfigChange('chartType', e.target.value)}>
+                                <option value="bar">Bar</option>
+                                <option value="line">Line</option>
+                                <option value="scatter">Scatter</option>
+                                <option value="pie">Pie</option>
+                            </FormSelect>
+                            <FormSelect label={t('data_source')} value={tempConfig.dataSourceId || ''} onChange={e => handleConfigChange('dataSourceId', e.target.value)}>
+                                <option value="" disabled>{t('select_source')}</option>
+                                {CHART_DATA_SOURCES.map(ds => <option key={ds.id} value={ds.id}>{ds.name}</option>)}
+                            </FormSelect>
+                            {activeDataSource && (
+                                <>
+                                    <FormSelect label="X-Axis" value={tempConfig.xAxisField || ''} onChange={e => handleConfigChange('xAxisField', e.target.value)}>
+                                        <option value="" disabled>{t('select_field')}</option>
+                                        {activeDataSource.fields.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                                    </FormSelect>
+                                    <FormSelect label="Y-Axis" value={tempConfig.yAxisField || ''} onChange={e => handleConfigChange('yAxisField', e.target.value)}>
+                                        <option value="" disabled>{t('select_field')}</option>
+                                        {activeDataSource.fields.filter(f => f.type === 'value').map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                                    </FormSelect>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{t('color')}</label>
+                                        <input
+                                            type="color"
+                                            value={tempConfig.color || '#8884d8'}
+                                            onChange={(e) => handleConfigChange('color', e.target.value)}
+                                            className="w-full h-10 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md p-1"
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            <button onClick={handleSaveConfig} className="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                                <Save className="w-4 h-4" />
+                                <span>{t('save_chart')}</span>
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-gray-500">
+                             <p>{t('select_or_create_chart')}</p>
+                        </div>
+                    )}
+                </div>
+                <div className="w-2/3 p-6">
+                    {renderChartPreview()}
+                </div>
+            </main>
         </div>
-        <button onClick={handleGenerateChart} className="w-full flex items-center justify-center space-x-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
-            <Icon name="BarChart3" className="w-5 h-5" />
-            <span>Generate Chart</span>
-        </button>
-      </div>
-      <div className="lg:col-span-3 bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 shadow-lg backdrop-blur-sm">
-          {renderGeneratedChart()}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ChartBuilder;

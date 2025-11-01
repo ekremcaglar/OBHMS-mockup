@@ -1,30 +1,54 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KAAN OBHMS Dashboard</title>
+    <title>KAAN OBHMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/1.378.0/lucide.min.js" rel="stylesheet" />
-    <script src="https://unpkg.com/lucide@latest"></script>
-  <script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.552.0"
-  }
-}
-</script>
-</head>
-  <body class="bg-[#101827] text-gray-300">
-    <div id="root"></div>
-    <script>
-      lucide.createIcons();
+    <style>
+      /* Custom scrollbar for a better look */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      html.dark ::-webkit-scrollbar-track { background: #1f2937; }
+      html.dark ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+      html.dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+      html.light ::-webkit-scrollbar-track { background: #e5e7eb; }
+      html.light ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
+      html.light ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+      
+      .no-print { display: block; }
+      @media print {
+        body * { visibility: hidden; }
+        .print-container, .print-container * { visibility: visible; }
+        .print-container { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print { display: none !important; }
+        .print-show { display: block !important; }
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "path": "https://aistudiocdn.com/path@^0.12.7",
+        "vite": "https://aistudiocdn.com/vite@^7.1.12",
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.552.0",
+        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+        "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
+        "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+        "marked": "https://aistudiocdn.com/marked@^16.4.1"
+      }
+    }
     </script>
+    <script>
+      // Configure Tailwind to use class-based dark mode
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+  </head>
+  <body class="bg-gray-100 dark:bg-[#101827] text-gray-900 dark:text-gray-200 antialiased transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

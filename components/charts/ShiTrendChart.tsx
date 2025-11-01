@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, Brush } from 'recharts';
 import { SHI_TREND_DATA } from '../../constants';
 
 const ShiTrendChart = () => {
@@ -22,6 +21,7 @@ const ShiTrendChart = () => {
         />
         <Legend wrapperStyle={{fontSize: "12px"}} />
         <Line type="monotone" dataKey="shi" name="System Health Index" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+        <Brush dataKey="week" height={20} stroke="#8b5cf6" fill="#1f2937" />
       </LineChart>
     </ResponsiveContainer>
   );

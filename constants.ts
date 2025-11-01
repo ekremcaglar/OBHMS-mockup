@@ -1,136 +1,525 @@
+import { FleetData, Metric, Dashboard, ChartConfig, DataSource, Shortcut, Announcement, NewsItem, MaintenanceItem, TileType, ReportTemplate, TCP, UserRole } from './types';
 
-import { FleetData } from './types';
+// Metrics
+const missionCapableRate: Metric = {
+  id: 'mc-rate',
+  title: 'Mission Capable Rate',
+  description: 'Percentage of aircraft in the fleet ready for mission tasking.',
+  value: '92.3',
+  unit: '%',
+  status: 'nominal',
+  trend: 'up',
+};
 
+const fleetAvailability: Metric = {
+  id: 'fleet-availability',
+  title: 'Fleet Availability',
+  description: 'Percentage of the fleet that is not grounded for maintenance.',
+  value: 88.5,
+  unit: '%',
+  status: 'warning',
+  trend: 'down',
+};
+
+const nffRate: Metric = {
+  id: 'nff-rate',
+  title: 'No Fault Found Rate',
+  description: 'Percentage of maintenance actions where no fault was found.',
+  value: '4.1',
+  unit: '%',
+  status: 'nominal',
+  trend: 'down',
+};
+
+const aogEvents: Metric = {
+  id: 'aog-events',
+  title: 'AOG Events (7 days)',
+  description: 'Number of Aircraft On Ground events in the last 7 days.',
+  value: 1,
+  status: 'critical',
+  trend: 'stable',
+  unit: '',
+};
+
+const rulExpirationForecast: Metric = {
+  id: 'rul-forecast',
+  title: 'RUL Expirations (30d)',
+  description: 'Number of components with Remaining Useful Life expiring in the next 30 days.',
+  value: 8,
+  status: 'warning',
+  trend: 'up',
+  unit: 'components',
+};
+
+export const METRICS_MAP = new Map<string, Metric>([
+  ['mc-rate', missionCapableRate],
+  ['fleet-availability', fleetAvailability],
+  ['nff-rate', nffRate],
+  ['aog-events', aogEvents],
+  ['rul-forecast', rulExpirationForecast],
+]);
+
+
+// Mock Fleet Data
 export const MOCK_FLEET_DATA: FleetData = {
-  fleetAvailability: {
-    id: 'far-001',
-    title: 'Fleet Availability Rate',
-    value: 92.1,
-    unit: '%',
-    status: 'nominal',
-    description: 'Percentage of time the fleet is physically available for deployment.',
-  },
-  missionCapableRate: {
-    id: 'mcr-001',
-    title: 'Mission Capable Rate',
-    value: 88.5,
-    unit: '%',
-    status: 'warning',
-    description: 'Percentage of the fleet officially categorized as Mission Capable.',
-  },
-  nffRate: {
-    id: 'nffr-001',
-    title: 'No Fault Found Rate',
-    value: 8,
-    unit: '%',
-    trend: 'down',
-    status: 'nominal',
-    description: 'Rate of components removed that test functional, indicating diagnostic accuracy.',
-  },
-  aogEvents: {
-    id: 'aog-001',
-    title: 'AOG Events / 1,000 FH',
-    value: 2.3,
-    unit: '',
-    trend: 'stable',
-    status: 'nominal',
-    description: 'Frequency of unexpected Aircraft On Ground incidents per 1,000 flight hours.',
-  },
-  rulExpirationForecast: {
-      id: 'rul-exp-001',
-      title: 'RUL Expirations (30-day)',
-      value: 14,
-      unit: 'components',
-      status: 'warning',
-      description: 'Components projected to reach critical RUL thresholds in the next 30 days.'
-  },
+  missionCapableRate,
+  fleetAvailability,
+  nffRate,
+  aogEvents,
+  rulExpirationForecast,
   aircraft: [
     {
       id: 'ac-001',
       tailNumber: 'KAAN-001',
+      squadron: '101st "Asena"',
+      missionType: 'Combat Air Patrol',
       status: 'nominal',
       missionCapableRate: 98,
-      flightHours: 1240,
+      flightHours: 1250,
       aogDurationHours: null,
       systems: [
-        { id: 'sys-prop-001', name: 'Propulsion', healthIndex: 95, status: 'nominal', metrics: [] },
-        { id: 'sys-avio-001', name: 'Avionics', healthIndex: 92, status: 'nominal', metrics: [] },
+        { id: 'sys-01', name: 'Avionics', status: 'nominal', healthIndex: 99, metrics: [] },
+        { id: 'sys-02', name: 'Propulsion', status: 'nominal', healthIndex: 97, metrics: [] },
+        { id: 'sys-03', name: 'Hydraulics', status: 'warning', healthIndex: 85, metrics: [
+          {id: 'm-h-1', title: 'Pressure Fluctuation', value: '5%', unit: 'Δ', status: 'warning', description: ''},
+        ]},
+        { id: 'sys-04', name: 'Airframe', status: 'nominal', healthIndex: 99, metrics: [] },
       ],
     },
     {
       id: 'ac-002',
       tailNumber: 'KAAN-002',
+      squadron: '101st "Asena"',
+      missionType: 'Ferry',
       status: 'critical',
       missionCapableRate: 0,
-      flightHours: 890,
-      aogDurationHours: 18,
+      flightHours: 870,
+      aogDurationHours: 48,
       systems: [
-        {
-          id: 'sys-prop-002',
-          name: 'Propulsion',
-          healthIndex: 45,
-          status: 'critical',
-          metrics: [
-            { id: 'rul-turb-002', title: 'Turbine Blade RUL', value: 25, unit: 'FH', status: 'critical', description: 'Remaining Useful Life of port-side turbine blade.' },
-            { id: 'vib-eng-002', title: 'Engine Vibration', value: 1.8, unit: 'IPS', status: 'warning', description: 'Increased vibration detected in Engine 1.' },
-          ],
-        },
-        { id: 'sys-avio-002', name: 'Avionics', healthIndex: 88, status: 'nominal', metrics: [] },
+        { id: 'sys-01', name: 'Avionics', status: 'nominal', healthIndex: 95, metrics: [] },
+        { id: 'sys-02', name: 'Propulsion', status: 'critical', healthIndex: 45, metrics: [
+            {id: 'm-p-1', title: 'Turbine RUL', value: '10', unit: 'FH', status: 'critical', description: ''},
+            {id: 'm-p-2', title: 'EGT Anomaly', value: '+15°C', status: 'warning', description: '', unit: '°C'},
+        ]},
+        { id: 'sys-03', name: 'Hydraulics', status: 'nominal', healthIndex: 92, metrics: [] },
+        { id: 'sys-04', name: 'Airframe', status: 'nominal', healthIndex: 98, metrics: [] },
       ],
     },
     {
       id: 'ac-003',
       tailNumber: 'KAAN-003',
+      squadron: '102nd "Hançer"',
+      missionType: 'Training',
       status: 'warning',
-      missionCapableRate: 75,
-      flightHours: 1523,
+      missionCapableRate: 85,
+      flightHours: 1530,
       aogDurationHours: null,
       systems: [
-        { id: 'sys-prop-003', name: 'Propulsion', healthIndex: 85, status: 'nominal', metrics: [] },
-        {
-          id: 'sys-hyd-003',
-          name: 'Hydraulics',
-          healthIndex: 72,
-          status: 'warning',
-          metrics: [
-            { id: 'pres-hyd-003', title: 'Pressure Deviation', value: 8, unit: '%', status: 'warning', description: 'System A pressure showing intermittent deviation.' },
-            { id: 'temp-hyd-003', title: 'Fluid Temperature', value: 95, unit: '°C', status: 'nominal', description: 'Hydraulic fluid temperature within normal range.' },
-          ],
-        },
+        { id: 'sys-01', name: 'Avionics', status: 'nominal', healthIndex: 96, metrics: [] },
+        { id: 'sys-02', name: 'Propulsion', status: 'nominal', healthIndex: 94, metrics: [] },
+        { id: 'sys-03', name: 'Hydraulics', status: 'warning', healthIndex: 78, metrics: [
+             {id: 'm-h-2', title: 'Reservoir Level', value: 'Low', status: 'warning', description: '', unit: ''}
+        ]},
+        { id: 'sys-04', name: 'Airframe', status: 'warning', healthIndex: 88, metrics: [
+             {id: 'm-a-1', title: 'Stress Sensor #7', value: 'High', status: 'warning', description: '', unit: ''}
+        ]},
       ],
     },
-     {
+    {
       id: 'ac-004',
       tailNumber: 'KAAN-004',
+      squadron: '102nd "Hançer"',
+      missionType: 'Interdiction',
       status: 'nominal',
-      missionCapableRate: 100,
-      flightHours: 650,
+      missionCapableRate: 99,
+      flightHours: 420,
       aogDurationHours: null,
       systems: [
-        { id: 'sys-prop-004', name: 'Propulsion', healthIndex: 98, status: 'nominal', metrics: [] },
-        { id: 'sys-avio-004', name: 'Avionics', healthIndex: 96, status: 'nominal', metrics: [] },
+        { id: 'sys-01', name: 'Avionics', status: 'nominal', healthIndex: 99, metrics: [] },
+        { id: 'sys-02', name: 'Propulsion', status: 'nominal', healthIndex: 98, metrics: [] },
+        { id: 'sys-03', name: 'Hydraulics', status: 'nominal', healthIndex: 99, metrics: [] },
+        { id: 'sys-04', name: 'Airframe', status: 'nominal', healthIndex: 100, metrics: [] },
       ],
     },
   ],
 };
 
+
+// Chart Data
 export const FAULTS_BY_SYSTEM = [
-    { name: 'Avionics', count: 18, fill: '#3b82f6' },
-    { name: 'Hydraulics', count: 12, fill: '#8b5cf6' },
-    { name: 'Propulsion', count: 9, fill: '#ef4444' },
-    { name: 'Flight Controls', count: 7, fill: '#f97316' },
-    { name: 'Power Systems', count: 5, fill: '#eab308' },
+  { name: 'Avionics', count: 12 },
+  { name: 'Propulsion', count: 25 },
+  { name: 'Hydraulics', count: 18 },
+  { name: 'Landing Gear', count: 8 },
+  { name: 'ECS', count: 5 },
 ];
 
 export const SHI_TREND_DATA = [
-  { week: 'Wk 1', shi: 98 },
-  { week: 'Wk 2', shi: 97 },
-  { week: 'Wk 3', shi: 97 },
-  { week: 'Wk 4', shi: 95 },
-  { week: 'Wk 5', shi: 92 },
-  { week: 'Wk 6', shi: 89 },
-  { week: 'Wk 7', shi: 88 },
-  { week: 'Wk 8', shi: 85 },
-  { week: 'Wk 9', shi: 84 },
-  { week: 'Wk 10', shi: 82 },
+  { week: 'W-10', shi: 94.5 },
+  { week: 'W-9', shi: 95.1 },
+  { week: 'W-8', shi: 93.8 },
+  { week: 'W-7', shi: 94.2 },
+  { week: 'W-6', shi: 92.5 },
+  { week: 'W-5', shi: 91.8 },
+  { week: 'W-4', shi: 92.1 },
+  { week: 'W-3', shi: 90.5 },
+  { week: 'W-2', shi: 89.9 },
+  { week: 'W-1', shi: 88.7 },
 ];
+
+// Initial App State Data
+export const INITIAL_DASHBOARDS: Dashboard[] = [
+    {
+        id: 'db-1',
+        name: 'Fleet Command Overview',
+        tiles: [
+            { id: 't-1', type: 'metric', metricId: 'mc-rate', gridSpan: 3 },
+            { id: 't-2', type: 'gauge', metricId: 'fleet-availability', gridSpan: 3 },
+            { id: 't-3', type: 'metric', metricId: 'nff-rate', gridSpan: 2 },
+            { id: 't-4', type: 'metric', metricId: 'aog-events', gridSpan: 2 },
+            { id: 't-5', type: 'metric', metricId: 'rul-forecast', gridSpan: 2 },
+            { id: 't-6', type: 'aircraft_list', gridSpan: 4 },
+            { id: 't-7', type: 'ai_summary', gridSpan: 8 },
+            { id: 't-8', type: 'shi_trend', title: 'Fleet System Health Index (SHI) Trend', gridSpan: 12 },
+        ]
+    },
+    {
+        id: 'db-2',
+        name: 'Maintenance Watchlist',
+        tiles: [
+          { id: 't-9', type: 'maintenance_list', gridSpan: 12 },
+        ]
+    }
+];
+
+export const INITIAL_CHARTS: ChartConfig[] = [
+    {
+        id: 'chart-1',
+        name: 'Faults by System',
+        dataSourceId: 'fault-data',
+        chartType: 'bar',
+        xAxisField: 'system',
+        yAxisField: 'faultCount'
+    },
+    {
+        id: 'chart-2',
+        name: 'Vibration Trend - ENG-01',
+        dataSourceId: 'engine-vibration',
+        chartType: 'line',
+        xAxisField: 'date',
+        yAxisField: 'vibrationRms'
+    }
+];
+
+export const CHART_DATA_SOURCES: DataSource[] = [
+    {
+        id: 'fault-data',
+        name: 'Historical Fault Data',
+        description: 'Aggregated fault codes by system over the last 90 days.',
+        icon: 'ShieldAlert',
+        fields: [
+            { id: 'system', name: 'Aircraft System', type: 'category' },
+            { id: 'faultCount', name: 'Fault Count', type: 'value' },
+            { id: 'severity', name: 'Average Severity', type: 'value' },
+        ]
+    },
+    {
+        id: 'engine-vibration',
+        name: 'Engine Vibration Telemetry',
+        description: 'Time-series vibration data from engine sensors.',
+        icon: 'RadioTower',
+        fields: [
+            { id: 'date', name: 'Date', type: 'category' },
+            { id: 'vibrationRms', name: 'Vibration (RMS)', type: 'value' },
+            { id: 'egt', name: 'EGT (°C)', type: 'value' },
+            { id: 'engineId', name: 'Engine ID', type: 'category' },
+        ]
+    }
+];
+
+export const MOCK_CHART_DATA: { [key: string]: any[] } = {
+    'fault-data': [
+        { system: 'Avionics', faultCount: 12, severity: 2.1 },
+        { system: 'Propulsion', faultCount: 25, severity: 4.5 },
+        { system: 'Hydraulics', faultCount: 18, severity: 3.2 },
+        { system: 'Landing Gear', faultCount: 8, severity: 4.1 },
+        { system: 'ECS', faultCount: 5, severity: 1.8 },
+    ],
+    'engine-vibration': [
+        { date: '2023-10-01', vibrationRms: 0.12, egt: 850, engineId: 'ENG-01' },
+        { date: '2023-10-02', vibrationRms: 0.13, egt: 852, engineId: 'ENG-01' },
+        { date: '2023-10-03', vibrationRms: 0.12, egt: 851, engineId: 'ENG-01' },
+        { date: '2023-10-04', vibrationRms: 0.15, egt: 855, engineId: 'ENG-01' },
+        { date: '2023-10-05', vibrationRms: 0.16, egt: 858, engineId: 'ENG-01' },
+        { date: '2023-10-06', vibrationRms: 0.18, egt: 860, engineId: 'ENG-01' },
+    ]
+};
+
+// Home Page Data
+export const SHORTCUTS_DATA: Shortcut[] = [
+    { id: 'sc-1', title: 'Dashboards', icon: 'LayoutDashboard', targetApp: 'Dashboards' },
+    { id: 'sc-2', title: 'Health Monitoring', icon: 'HeartPulse', targetApp: 'Health' },
+    { id: 'sc-3', title: 'Chart Builder', icon: 'AreaChart', targetApp: 'Chart Builder' },
+    { id: 'sc-4', title: 'Reports', icon: 'FileText', targetApp: 'Reports' },
+];
+
+export const ANNOUNCEMENTS_DATA: Announcement[] = [
+    { id: 'an-1', title: 'OBHMS v2.1 Deployed', content: 'Version 2.1 is now live, featuring the new Chart Builder module and enhanced AI summary capabilities.', date: '2023-10-26' },
+    { id: 'an-2', title: 'Scheduled Maintenance', content: 'The system will be offline for scheduled maintenance on Sunday from 0200 to 0400 Zulu.', date: '2023-10-24' },
+];
+
+export const NEWS_DATA: NewsItem[] = [
+    { id: 'nw-1', title: 'New Predictive Maintenance Algorithm Rolled Out for Propulsion Systems', source: 'Engineering Command', content: 'A new ML model is improving RUL accuracy for turbine blades by 15%.', date: '2023-10-25' },
+    { id: 'nw-2', title: 'Global Supply Chain Delays Affecting Landing Gear Components', source: 'Logistics Weekly', content: 'Expect extended lead times for specific hydraulic actuators. Plan maintenance accordingly.', date: '2023-10-22' },
+];
+
+export const AVAILABLE_TILES = [
+    { name: 'Metric', type: 'metric' as TileType, defaultGridSpan: 3, defaultMetricId: 'mc-rate' },
+    { name: 'Gauge', type: 'gauge' as TileType, defaultGridSpan: 3, defaultMetricId: 'fleet-availability' },
+    { name: 'Faults By System', type: 'faults_by_system' as TileType, defaultGridSpan: 6 },
+    { name: 'SHI Trend', type: 'shi_trend' as TileType, defaultGridSpan: 6 },
+    { name: 'Aircraft List', type: 'aircraft_list' as TileType, defaultGridSpan: 12 },
+    { name: 'AI Summary', type: 'ai_summary' as TileType, defaultGridSpan: 12 },
+    { name: 'Maintenance List', type: 'maintenance_list' as TileType, defaultGridSpan: 12 },
+    { name: 'Engine Vibration', type: 'engine_vibration' as TileType, defaultGridSpan: 6 },
+    { name: 'Airframe Stress Chart', type: 'airframe_stress_chart' as TileType, defaultGridSpan: 6 },
+    { name: 'Radar Chart', type: 'radar_chart' as TileType, defaultGridSpan: 6 },
+    { name: 'Heatmap', type: 'heatmap' as TileType, defaultGridSpan: 6 },
+    { name: '3D Model', type: 'model_3d' as TileType, defaultGridSpan: 6 },
+    { name: 'Pilot Fatigue Trend', type: 'pilot_fatigue_trend' as TileType, defaultGridSpan: 6 },
+];
+
+export const MOCK_MAINTENANCE_DATA: MaintenanceItem[] = [
+    { id: 'maint-1', aircraft: 'KAAN-002', component: 'Turbine Blade S7', description: 'RUL below 20 hours, requires inspection.', priority: 'High', dueDate: '2 days' },
+    { id: 'maint-2', aircraft: 'KAAN-003', component: 'Hydraulic Reservoir', description: 'Persistent low level warning, check for leaks.', priority: 'Medium', dueDate: '5 days' },
+    { id: 'maint-3', aircraft: 'KAAN-001', component: 'Avionics Bus #3', description: 'Intermittent data dropouts reported.', priority: 'Medium', dueDate: '7 days' },
+];
+
+export const STRUCTURAL_HEALTH_METRICS = {
+    fuselageFatigue: { id: 'sh-1', title: 'Fuselage Fatigue Life', value: '78', unit: '% Used', status: 'nominal', description: 'Percentage of calculated fuselage fatigue life consumed.' } as Metric,
+    wingStressCycles: { id: 'sh-2', title: 'Wing Stress Cycles', value: '65,234', unit: 'Cycles', status: 'nominal', description: 'Number of high-stress cycles recorded on wing spars.' } as Metric,
+    landingGearIntegrity: { id: 'sh-3', title: 'Landing Gear Integrity', value: '99.8', unit: '% Health', status: 'nominal', description: 'Health index based on landing impact sensor data.' } as Metric,
+};
+
+export const PORT_ENGINE_DATA = Array.from({ length: 50 }, (_, i) => ({
+    time: i,
+    egt: 850 + Math.random() * 10 - 5,
+    n1: 98 + Math.random() * 0.5 - 0.25,
+    oil: 90 + Math.random() * 4 - 2,
+    vibration: 1.2 + Math.random() * 0.1 - 0.05,
+}));
+export const STARBOARD_ENGINE_DATA = Array.from({ length: 50 }, (_, i) => ({
+    time: i,
+    egt: 865 + Math.random() * 12 - 6,
+    n1: 97.8 + Math.random() * 0.6 - 0.3,
+    oil: 88 + Math.random() * 5 - 2.5,
+    vibration: 1.5 + Math.random() * 0.2 - 0.1,
+}));
+
+export const PILOT_DATA = {
+    name: 'Major Ali Vural',
+    callsign: 'Cobra',
+    status: 'Cleared for Flight',
+    totalFlightHours: 2150,
+    kaanHours: 320,
+    lastFlight: '2023-10-25',
+    fatigueIndex: 25,
+    certifications: ['Combat Ready', 'IFR', 'Night Ops', 'Test Pilot Level 2'],
+};
+
+export const PILOT_FATIGUE_TREND = Array.from({ length: 10 }, (_, i) => ({
+    flight: i + 1,
+    fatigueIndex: 15 + Math.random() * 20,
+}));
+
+export const PILOT_LIVE_BIOMETRICS = {
+    heartRate: Array.from({ length: 20 }, (_, i) => ({ x: i, y: 75 + Math.random() * 10 - 5 })),
+    respiration: Array.from({ length: 20 }, (_, i) => ({ x: i, y: 16 + Math.random() * 4 - 2 })),
+    gForce: Array.from({ length: 20 }, (_, i) => ({ x: i, y: 1 + Math.sin(i / 5) * 0.5 + Math.random() * 0.2 })),
+};
+
+export const AIRFRAME_STRESS_DATA = [
+    { fh: 1200, events: 2 },
+    { fh: 1210, events: 1 },
+    { fh: 1220, events: 5 },
+    { fh: 1230, events: 3 },
+    { fh: 1240, events: 2 },
+    { fh: 1250, events: 4 },
+];
+
+export const ENGINE_VIBRATION_DATA = Array.from({ length: 12 }, (v, i) => ({
+    date: `2023-${String(i+1).padStart(2,'0')}-01`,
+    vibration: 1.2 + Math.random() * 0.4,
+}));
+
+export const RADAR_CHART_DATA = [
+    { subject: 'Avionics', 'KAAN-001': 99, 'KAAN-002': 95, 'KAAN-003': 96, 'KAAN-004': 99 },
+    { subject: 'Propulsion', 'KAAN-001': 97, 'KAAN-002': 45, 'KAAN-003': 94, 'KAAN-004': 98 },
+    { subject: 'Hydraulics', 'KAAN-001': 85, 'KAAN-002': 92, 'KAAN-003': 78, 'KAAN-004': 99 },
+    { subject: 'Airframe', 'KAAN-001': 99, 'KAAN-002': 98, 'KAAN-003': 88, 'KAAN-004': 100 },
+];
+
+export const HEATMAP_DATA = {
+    labels: ['EGT', 'N1', 'Oil Press', 'Vibration'],
+    data: [
+      [1.00, 0.65, -0.32, 0.81],
+      [0.65, 1.00, -0.21, 0.75],
+      [-0.32, -0.21, 1.00, -0.40],
+      [0.81, 0.75, -0.40, 1.00],
+    ],
+};
+
+export const MOCK_TCP_DATA: TCP[] = [
+    { id: 'TCP-2023-001', title: 'Upgrade F-135 Engine Control Software to v3.2.1', aircraftSerialNumber: 'ALL', status: 'Approved', author: 'J. Doe', createdDate: '2023-10-15' },
+    { id: 'TCP-2023-002', title: 'Inspect Port-side Wing Spar for hairline cracks', aircraftSerialNumber: 'KAAN-003', status: 'In Review', author: 'A. Smith', createdDate: '2023-10-22' },
+    { id: 'TCP-2023-003', title: 'Replace cockpit display unit (CDU) #2', aircraftSerialNumber: 'KAAN-001', status: 'Rejected', author: 'B. White', createdDate: '2023-09-30' },
+    { id: 'TCP-2023-004', title: 'Calibrate Radar Altimeter', aircraftSerialNumber: 'ALL', status: 'Draft', author: 'C. Green', createdDate: '2023-10-26' },
+    { id: 'TCP-2023-005', title: 'Install new sensor bracket on landing gear', aircraftSerialNumber: 'KAAN-004', status: 'Approved', author: 'J. Doe', createdDate: '2023-08-11' },
+];
+
+export const REPORT_TEMPLATES: ReportTemplate[] = [
+    { id: 'rt-1', name: 'aircraft_health_summary', description: 'aircraft_health_summary_desc', icon: 'HeartPulse' },
+    { id: 'rt-2', name: 'fleet_mission_capability', description: 'fleet_mission_capability_desc', icon: 'Plane' },
+    { id: 'rt-3', name: 'system_fault_analysis', description: 'system_fault_analysis_desc', icon: 'ShieldAlert' },
+    { id: 'rt-4', name: 'component_rul_forecast', description: 'component_rul_forecast_desc', icon: 'TrendingUp' },
+    { id: 'rt-5', name: 'pilot_fatigue_report', description: 'pilot_fatigue_report_desc', icon: 'User' },
+];
+
+export const MOCK_FAULT_LOGS = [
+  { id: 'fl-1', timestamp: '2023-10-26 08:15', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0128', description: 'Coolant Thermostat Malfunction', severity: 'Medium' },
+  { id: 'fl-2', timestamp: '2023-10-26 07:30', aircraft: 'KAAN-003', system: 'Hydraulics', code: 'H5501', description: 'Reservoir Pressure Low - Port', severity: 'High' },
+  { id: 'fl-3', timestamp: '2023-10-25 14:00', aircraft: 'KAAN-001', system: 'Avionics', code: 'A2310', description: 'Intermittent MFD #3 Blanking', severity: 'Low' },
+  { id: 'fl-4', timestamp: '2023-10-25 11:20', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0420', description: 'Catalyst System Efficiency Below Threshold', severity: 'Medium' },
+  { id: 'fl-5', timestamp: '2023-10-24 16:45', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0301', description: 'Cylinder 1 Misfire Detected', severity: 'High' },
+  { id: 'fl-6', timestamp: '2023-10-23 09:05', aircraft: 'KAAN-004', system: 'ECS', code: 'E1005', description: 'Cabin Pressure Sensor Drift', severity: 'Low' },
+];
+
+export const ADMIN_ROLES: UserRole[] = [
+  'OBHMS Administrator / System Owner',
+  'Security Officer',
+  'Data Steward',
+  'Compliance/Certification Officer',
+  'External Systems Integrator',
+];
+
+export const ROLE_I18N_MAP: Record<UserRole, string> = {
+  'Maintenance Technician': 'maintenance_technician',
+  'Logistics Planner / Supply Chain Analyst': 'logistics_planner',
+  'Pilot / Operator': 'pilot_operator',
+  'Prognostic Engineer': 'prognostic_engineer',
+  'Diagnostic Engineer / Investigator': 'diagnostic_engineer',
+  'Reliability Analyst': 'reliability_analyst',
+  'System Engineering Lead': 'system_engineering_lead',
+  'OBHMS Administrator / System Owner': 'obhms_administrator',
+  'Security Officer': 'security_officer',
+  'Data Steward': 'data_steward',
+  'Compliance/Certification Officer': 'compliance_officer',
+  'External Systems Integrator': 'external_systems_integrator',
+};
+
+export const ROLE_GROUPS = [
+  { group: 'execution_workflow_roles', roles: [
+      'Maintenance Technician',
+      'Logistics Planner / Supply Chain Analyst',
+      'Pilot / Operator',
+    ] as UserRole[] 
+  },
+  { group: 'analysis_intelligence_roles', roles: [
+      'Prognostic Engineer',
+      'Diagnostic Engineer / Investigator',
+      'Reliability Analyst',
+      'System Engineering Lead',
+    ] as UserRole[] 
+  },
+  { group: 'administration_governance_roles', roles: [
+      'OBHMS Administrator / System Owner',
+      'Security Officer',
+      'Data Steward',
+      'Compliance/Certification Officer',
+      'External Systems Integrator',
+    ] as UserRole[] 
+  },
+];
+
+export const PILLARS_DATA = [
+  {
+    titleKey: 'pillar_core_analytics',
+    sections: [
+      { key: 'Analysis', titleKey: 'section_analysis_title', descriptionKey: 'section_analysis_desc' },
+      { key: 'Health Monitoring', titleKey: 'section_health_monitoring_title', descriptionKey: 'section_health_monitoring_desc' },
+      { key: 'RCA Workbench', titleKey: 'section_rca_workbench_title', descriptionKey: 'section_rca_workbench_desc' },
+      { key: 'Modeling & Algorithm Management', titleKey: 'section_modeling_management_title', descriptionKey: 'section_modeling_management_desc' },
+      { key: 'Digital Twins & Simulation', titleKey: 'section_digital_twins_title', descriptionKey: 'section_digital_twins_desc' },
+      { key: 'Custom Feature Builder', titleKey: 'section_feature_builder_title', descriptionKey: 'section_feature_builder_desc' },
+      { key: 'Life Cycle Cost (LCC) Modeling', titleKey: 'section_lcc_modeling_title', descriptionKey: 'section_lcc_modeling_desc' },
+      { key: 'Design Change Impact Simulator', titleKey: 'section_design_change_simulator_title', descriptionKey: 'section_design_change_simulator_desc' },
+      { key: 'Health Threshold Management', titleKey: 'section_health_threshold_management_title', descriptionKey: 'section_health_threshold_management_desc' },
+      { key: 'Mission Planning & Profiles', titleKey: 'section_mission_planning_title', descriptionKey: 'section_mission_planning_desc' },
+      { key: 'Environmental & Operational Limits', titleKey: 'section_env_op_limits_title', descriptionKey: 'section_env_op_limits_desc' },
+      { key: 'Statistical Process Control (SPC) Charts', titleKey: 'section_spc_charts_title', descriptionKey: 'section_spc_charts_desc' },
+      { key: 'Wear-out Rate Comparison', titleKey: 'section_wear_rate_comparison_title', descriptionKey: 'section_wear_rate_comparison_desc' },
+      { key: 'Training Simulator Data Interface', titleKey: 'section_training_simulator_interface_title', descriptionKey: 'section_training_simulator_interface_desc' },
+      { key: 'Cost-Benefit Analysis Report Generator', titleKey: 'section_cost_benefit_analysis_title', descriptionKey: 'section_cost_benefit_analysis_desc' },
+    ]
+  },
+  {
+    titleKey: 'pillar_data_management',
+    sections: [
+      { key: 'User & Role Administration', titleKey: 'section_user_admin_title', descriptionKey: 'section_user_admin_desc' },
+      { key: 'System Configuration & Settings', titleKey: 'section_system_config_title', descriptionKey: 'section_system_config_desc' },
+      { key: 'Data Ingestion Management', titleKey: 'section_data_ingestion_title', descriptionKey: 'section_data_ingestion_desc' },
+      { key: 'Audit Trail & Security Logs', titleKey: 'section_audit_trail_title', descriptionKey: 'section_audit_trail_desc' },
+      { key: 'System Health Monitoring', titleKey: 'section_system_health_monitoring_title', descriptionKey: 'section_system_health_monitoring_desc' },
+      { key: 'Data Quality & Governance', titleKey: 'section_data_quality_title', descriptionKey: 'section_data_quality_desc' },
+      { key: 'Sensor Calibration & Health Log', titleKey: 'section_sensor_calibration_title', descriptionKey: 'section_sensor_calibration_desc' },
+      { key: 'Cybersecurity Threat Assessment', titleKey: 'section_cybersecurity_title', descriptionKey: 'section_cybersecurity_desc' },
+      { key: 'Software Updates & Patch Management', titleKey: 'section_software_updates_title', descriptionKey: 'section_software_updates_desc' },
+      { key: 'Data Governance Rules Engine', titleKey: 'section_data_governance_title', descriptionKey: 'section_data_governance_desc' },
+      { key: 'Alerts & Notifications Center', titleKey: 'section_alerts_notifications_title', descriptionKey: 'section_alerts_notifications_desc' },
+      { key: 'Offline Mode Management', titleKey: 'section_offline_mode_title', descriptionKey: 'section_offline_mode_desc' },
+      { key: 'Change Management & Versioning', titleKey: 'section_change_management_title', descriptionKey: 'section_change_management_desc' },
+      { key: 'Multi-Language Support & Localization', titleKey: 'section_multi_language_title', descriptionKey: 'section_multi_language_desc' },
+      { key: 'User Behavior Analytics', titleKey: 'section_user_behavior_analytics_title', descriptionKey: 'section_user_behavior_analytics_desc' },
+      { key: 'Data Export/Import Utility', titleKey: 'section_data_export_import_title', descriptionKey: 'section_data_export_import_desc' },
+      { key: 'User Personalization & Customization', titleKey: 'section_user_personalization_title', descriptionKey: 'section_user_personalization_desc' },
+    ]
+  },
+  {
+    titleKey: 'pillar_maintenance_workflow',
+    sections: [
+      { key: 'Dashboards', titleKey: 'section_dashboards_title', descriptionKey: 'section_dashboards_desc' },
+      { key: 'Chart Builder', titleKey: 'section_chart_builder_title', descriptionKey: 'section_chart_builder_desc' },
+      { key: 'Reports', titleKey: 'section_reports_title', descriptionKey: 'section_reports_desc' },
+      { key: 'Work Order & Scheduling', titleKey: 'section_work_order_title', descriptionKey: 'section_work_order_desc' },
+      { key: 'Component Inventory & Traceability', titleKey: 'section_component_inventory_title', descriptionKey: 'section_component_inventory_desc' },
+      { key: 'Supply Chain & Logistics Dashboard', titleKey: 'section_supply_chain_title', descriptionKey: 'section_supply_chain_desc' },
+      { key: 'Master Equipment List (MEL) Management', titleKey: 'section_mel_management_title', descriptionKey: 'section_mel_management_desc' },
+      { key: 'Resource Allocation Optimization', titleKey: 'section_resource_allocation_title', descriptionKey: 'section_resource_allocation_desc' },
+      { key: 'Preventive Maintenance Task Library', titleKey: 'section_pm_task_library_title', descriptionKey: 'section_pm_task_library_desc' },
+      { key: 'Ground Support Equipment (GSE) Log', titleKey: 'section_gse_log_title', descriptionKey: 'section_gse_log_desc' },
+      { key: 'Discrepancy Reporting & Tracking', titleKey: 'section_discrepancy_reporting_title', descriptionKey: 'section_discrepancy_reporting_desc' },
+      { key: 'Mission Debrief Interface', titleKey: 'section_mission_debrief_title', descriptionKey: 'section_mission_debrief_desc' },
+      { key: 'Digital Signatures & Approvals', titleKey: 'section_digital_signatures_title', descriptionKey: 'section_digital_signatures_desc' },
+      { key: 'TCP', titleKey: 'section_tcp_title', descriptionKey: 'section_tcp_desc' },
+    ]
+  },
+  {
+    titleKey: 'pillar_compliance_integration',
+    sections: [
+      { key: 'Fleet Management', titleKey: 'section_fleet_management_title', descriptionKey: 'section_fleet_management_desc' },
+      { key: 'API & Integration Console', titleKey: 'section_api_integration_title', descriptionKey: 'section_api_integration_desc' },
+      { key: 'Search & Knowledge Base', titleKey: 'section_search_knowledge_base_title', descriptionKey: 'section_search_knowledge_base_desc' },
+      { key: 'Training & Documentation', titleKey: 'section_training_documentation_title', descriptionKey: 'section_training_documentation_desc' },
+      { key: 'Certification & Compliance Tracking', titleKey: 'section_certification_compliance_title', descriptionKey: 'section_certification_compliance_desc' },
+      { key: 'Engineering Review Board (ERB) Interface', titleKey: 'section_erb_interface_title', descriptionKey: 'section_erb_interface_desc' },
+      { key: 'Maintenance Procedure Viewer', titleKey: 'section_maintenance_procedure_viewer_title', descriptionKey: 'section_maintenance_procedure_viewer_desc' },
+      { key: 'System Integration Validation', titleKey: 'section_system_integration_validation_title', descriptionKey: 'section_system_integration_validation_desc' },
+      { key: 'Aviation Standards Reference', titleKey: 'section_aviation_standards_reference_title', descriptionKey: 'section_aviation_standards_reference_desc' },
+      { key: 'User Feedback & Enhancement Pipeline', titleKey: 'section_user_feedback_title', descriptionKey: 'section_user_feedback_desc' },
+    ]
+  }
+];
+
+export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
+
+export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));
