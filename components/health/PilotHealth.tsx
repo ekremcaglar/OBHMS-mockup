@@ -3,6 +3,8 @@ import { PILOT_DATA, PILOT_FATIGUE_TREND, PILOT_LIVE_BIOMETRICS } from '../../co
 import Icon from '../Icon';
 import { useI18n } from '../../context/I18nContext';
 import { LineChart, BarChart, Line, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, AreaChart, Area } from 'recharts';
+import MetricCard from '../MetricCard';
+import PilotSkillsRadarChart from './charts/PilotSkillsRadarChart';
 
 const BiometricChart: React.FC<{ initialData: {x:number, y:number}[]; title: string; unit: string; color: string;}> = ({ initialData, title, unit, color }) => {
     const [data, setData] = useState(initialData);
@@ -86,21 +88,25 @@ const PilotHealth: React.FC = () => {
                     <div className="grid grid-cols-3 gap-4">
                         <BiometricChart initialData={PILOT_LIVE_BIOMETRICS.heartRate} title={t('heart_rate')} unit={t('bpm')} color="#ef4444" />
                         <BiometricChart initialData={PILOT_LIVE_BIOMETRICS.respiration} title={t('respiration')} unit={t('rpm')} color="#22c55e" />
-                        <BiometricChart initialData={PILOT_LIVE_BIOMETRICS.gForce} title={t('g_force')} unit="G" color="#3b82f6" />
+                        <BiometricChart initialData={PILOT_LIVE_BIOMETRICS.gForce} title="G-Force" unit="G" color="#3b82f6" />
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 shadow-lg backdrop-blur-sm h-80">
-                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('fatigue_trend_last_10')}</h3>
-                     <ResponsiveContainer width="100%" height="100%">
-                         <BarChart data={PILOT_FATIGUE_TREND} margin={{ top: 5, right: 10, left: -25, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                            <XAxis dataKey="flight" name="Flight #" stroke="#9ca3af" fontSize={12} />
-                            <YAxis domain={[0, 40]} stroke="#9ca3af" fontSize={12} />
-                            <Tooltip contentStyle={{ background: '#1f2937', borderColor: '#374151', borderRadius: '0.5rem' }} />
-                            <Bar dataKey="fatigueIndex" name="Fatigue Index" fill="#f59e0b" />
-                         </BarChart>
-                     </ResponsiveContainer>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-80">
+                    <MetricCard metric={{id: 'pilot-fatigue-chart', title: t('fatigue_trend_last_10'), value: '', unit: '', status: 'nominal', description: 'Fatigue index over last 10 flights.'}}>
+                         <ResponsiveContainer width="100%" height="100%">
+                             <BarChart data={PILOT_FATIGUE_TREND} margin={{ top: 20, right: 10, left: -25, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                                <XAxis dataKey="flight" name="Flight #" stroke="#9ca3af" fontSize={12} />
+                                <YAxis domain={[0, 40]} stroke="#9ca3af" fontSize={12} />
+                                <Tooltip contentStyle={{ background: '#1f2937', borderColor: '#374151', borderRadius: '0.5rem' }} />
+                                <Bar dataKey="fatigueIndex" name="Fatigue Index" fill="#f59e0b" />
+                             </BarChart>
+                         </ResponsiveContainer>
+                    </MetricCard>
+                    <MetricCard metric={{id:'pilot-skills', title:"Pilot Skills Assessment", value: '', unit: '', status: 'nominal', description: "Pilot's proficiency vs Squadron average."}}>
+                         <PilotSkillsRadarChart />
+                     </MetricCard>
                 </div>
             </div>
         </div>

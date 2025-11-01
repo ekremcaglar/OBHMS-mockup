@@ -442,6 +442,7 @@ export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-2', title: 'Health Monitoring', icon: 'HeartPulse', targetApp: 'Health' },
     { id: 'sc-3', title: 'Chart Builder', icon: 'AreaChart', targetApp: 'Chart Builder' },
     { id: 'sc-4', title: 'Reports', icon: 'FileText', targetApp: 'Reports' },
+    { id: 'sc-5', title: 'Help', icon: 'HelpCircle', targetApp: 'Help' },
 ];
 
 export const ANNOUNCEMENTS_DATA: Announcement[] = [
@@ -549,6 +550,29 @@ export const HEATMAP_DATA = {
       [0.81, 0.75, -0.40, 1.00],
     ],
 };
+
+// New data for Structural Heatmap
+export const AIRFRAME_STRESS_HEATMAP_DATA = {
+    labels: ['L-Wing Root', 'R-Wing Root', 'Fuselage-Fwd', 'Fuselage-Aft', 'Empennage'],
+    yLabels: ['Tension', 'Compression', 'Shear', 'Torsion'],
+    data: [
+      // L-Wing, R-Wing, Fuselage-Fwd, Fuselage-Aft, Empennage
+      [0.8, 0.82, 0.5, 0.7, 0.6], // Tension
+      [0.6, 0.65, 0.4, 0.8, 0.5], // Compression
+      [0.7, 0.71, 0.3, 0.6, 0.8], // Shear
+      [0.4, 0.4, 0.2, 0.5, 0.9],  // Torsion
+    ],
+};
+
+// New data for Pilot Skills Radar Chart
+export const PILOT_SKILLS_DATA = [
+    { skill: 'Take-off', pilot: 92, average: 85 },
+    { skill: 'Landing', pilot: 88, average: 82 },
+    { skill: 'Combat Maneuvers', pilot: 95, average: 90 },
+    { skill: 'Instrument Flight', pilot: 85, average: 88 },
+    { skill: 'Emergency Proc.', pilot: 90, average: 86 },
+];
+
 
 export const MOCK_TCP_DATA: TCP[] = [
     { id: 'TCP-2023-001', title: 'Upgrade F-135 Engine Control Software to v3.2.1', aircraftSerialNumber: 'ALL', status: 'Approved', author: 'J. Doe', createdDate: '2023-10-15' },

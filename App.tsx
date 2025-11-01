@@ -12,6 +12,7 @@ import TCP from './components/TCP';
 import Analysis from './components/Analysis';
 import All from './components/All';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
+import HelpPage from './components/HelpPage';
 import { MOCK_FLEET_DATA, INITIAL_DASHBOARDS, ADMIN_ROLES, ALL_SECTION_KEYS, SECTION_I18N_KEYS } from './constants';
 import { UserRole, Dashboard, HealthSubPage, AnalysisSubPage } from './types';
 import { generateSearchResponse } from './services/geminiService';
@@ -107,6 +108,8 @@ const App: React.FC = () => {
             return <TCP />;
         case 'All':
             return <All setCurrentPage={setCurrentPage} />;
+        case 'Help':
+            return <HelpPage />;
         case 'SearchResult':
              return searchState.isLoading 
                 ? <div className="text-center text-gray-400 mt-20">{t('analyzing_data')}...</div>
