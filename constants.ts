@@ -443,6 +443,9 @@ export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-3', title: 'Chart Builder', icon: 'AreaChart', targetApp: 'Chart Builder' },
     { id: 'sc-4', title: 'Reports', icon: 'FileText', targetApp: 'Reports' },
     { id: 'sc-6', title: 'User Roles', icon: 'Users', targetApp: 'UserRoles' },
+    { id: 'sc-7', title: 'Requirements', icon: 'ClipboardList', targetApp: 'Requirements' },
+    { id: 'sc-8', title: 'Dashboard Manual', icon: 'BookOpen', targetApp: 'DashboardManual' },
+    { id: 'sc-9', title: 'Chart Builder Manual', icon: 'BarChartHorizontal', targetApp: 'ChartBuilderManual' },
     { id: 'sc-5', title: 'Help', icon: 'HelpCircle', targetApp: 'Help' },
 ];
 
@@ -729,3 +732,44 @@ export const PILLARS_DATA = [
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
 export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));
+
+export const REQUIREMENTS_DATA = [
+  {
+    pillarKey: 'pillar_core_analytics',
+    sections: [
+      { key: 'Health Monitoring', titleKey: 'req_health_monitoring_title', descriptionKey: 'req_health_monitoring_desc' },
+      { key: 'Analysis', titleKey: 'req_analysis_title', descriptionKey: 'req_analysis_desc' },
+      { key: 'Prognostic Analysis', titleKey: 'req_prognostics_title', descriptionKey: 'req_prognostics_desc' },
+      { key: 'Root Cause Analysis', titleKey: 'req_rca_title', descriptionKey: 'req_rca_desc' },
+      { key: 'Digital Twins & Simulation', titleKey: 'req_digital_twin_title', descriptionKey: 'req_digital_twin_desc' },
+    ]
+  },
+  {
+    pillarKey: 'pillar_data_management',
+    sections: [
+      { key: 'User & Role Administration', titleKey: 'req_user_admin_title', descriptionKey: 'req_user_admin_desc' },
+      { key: 'Data Ingestion Management', titleKey: 'req_data_ingestion_title', descriptionKey: 'req_data_ingestion_desc' },
+      { key: 'Audit Trail & Security Logs', titleKey: 'req_security_logs_title', descriptionKey: 'req_security_logs_desc' },
+      { key: 'System Configuration & Settings', titleKey: 'req_system_config_title', descriptionKey: 'req_system_config_desc' },
+    ]
+  },
+  {
+    pillarKey: 'pillar_maintenance_workflow',
+    sections: [
+      { key: 'Dashboards', titleKey: 'req_dashboards_title', descriptionKey: 'req_dashboards_desc' },
+      { key: 'Chart Builder', titleKey: 'req_chart_builder_title', descriptionKey: 'req_chart_builder_desc' },
+      { key: 'Reports', titleKey: 'req_reports_title', descriptionKey: 'req_reports_desc' },
+      { key: 'TCP', titleKey: 'req_tcp_title', descriptionKey: 'req_tcp_desc' },
+      { key: 'Natural Language Search Analysis', titleKey: 'req_search_title', descriptionKey: 'req_search_desc' },
+    ]
+  },
+  {
+    pillarKey: 'pillar_compliance_integration',
+    sections: [
+      { key: 'API & Integration Console', titleKey: 'req_api_integration_title', descriptionKey: 'req_api_integration_desc' },
+      { key: 'Certification & Compliance Tracking', titleKey: 'req_compliance_tracking_title', descriptionKey: 'req_compliance_tracking_desc' },
+      { key: 'Training & Documentation', titleKey: 'req_documentation_title', descriptionKey: 'req_documentation_desc' },
+      { key: 'Multi-Language Support & Localization', titleKey: 'req_localization_title', descriptionKey: 'req_localization_desc' },
+    ]
+  }
+];
