@@ -86,7 +86,8 @@ const App: React.FC = () => {
         dataSourceId: null,
         chartType: 'bar',
         xAxisField: null,
-        yAxisField: null
+        // FIX: The property 'yAxisField' does not exist on type 'ChartConfig'. Corrected to 'yAxisFields' and initialized as an empty array to match the type definition.
+        yAxisFields: []
     };
     setCharts([...charts, newChart]);
     setActiveChartId(newId);

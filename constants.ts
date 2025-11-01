@@ -51,12 +51,52 @@ const rulExpirationForecast: Metric = {
   unit: 'components',
 };
 
+// New metrics for dashboards
+const fuselageFatigue: Metric = { id: 'sh-1', title: 'Fuselage Fatigue Life', value: '78', unit: '% Used', status: 'nominal', description: 'Percentage of calculated fuselage fatigue life consumed.' };
+const wingStressCycles: Metric = { id: 'sh-2', title: 'Wing Stress Cycles', value: '65,234', unit: 'Cycles', status: 'nominal', description: 'Number of high-stress cycles recorded on wing spars.' };
+const landingGearIntegrity: Metric = { id: 'sh-3', title: 'Landing Gear Integrity', value: '99.8', unit: '% Health', status: 'nominal', description: 'Health index based on landing impact sensor data.' };
+
+const pilotFatigueIndex: Metric = {
+    id: 'pilot-fatigue-index',
+    title: 'Avg. Pilot Fatigue Index',
+    description: 'Average fatigue index across all active pilots.',
+    value: 25,
+    unit: '',
+    status: 'nominal',
+    trend: 'stable',
+};
+
+const totalFlightHours: Metric = {
+    id: 'total-flight-hours',
+    title: 'Total Flight Hours (Pilot)',
+    description: 'Total flight hours for the current pilot.',
+    value: 2150,
+    unit: 'hrs',
+    status: 'nominal',
+};
+
+const kaanHours: Metric = {
+    id: 'kaan-hours',
+    title: 'KAAN Platform Hours (Pilot)',
+    description: 'Platform-specific hours for the current pilot.',
+    value: 320,
+    unit: 'hrs',
+    status: 'nominal',
+};
+
+
 export const METRICS_MAP = new Map<string, Metric>([
   ['mc-rate', missionCapableRate],
   ['fleet-availability', fleetAvailability],
   ['nff-rate', nffRate],
   ['aog-events', aogEvents],
   ['rul-forecast', rulExpirationForecast],
+  ['sh-1', fuselageFatigue],
+  ['sh-2', wingStressCycles],
+  ['sh-3', landingGearIntegrity],
+  ['pilot-fatigue-index', pilotFatigueIndex],
+  ['total-flight-hours', totalFlightHours],
+  ['kaan-hours', kaanHours],
 ]);
 
 
@@ -189,6 +229,104 @@ export const INITIAL_DASHBOARDS: Dashboard[] = [
         tiles: [
           { id: 't-9', type: 'maintenance_list', gridSpan: 12 },
         ]
+    },
+    {
+        id: 'db-3',
+        name: 'Propulsion Deep Dive',
+        tiles: [
+            { id: 't-10', type: 'engine_vibration', gridSpan: 6 },
+            { id: 't-11', type: 'heatmap', gridSpan: 6 },
+            { id: 't-12', type: 'metric', metricId: 'rul-forecast', gridSpan: 4 },
+            { id: 't-13', type: 'ai_summary', gridSpan: 8 },
+        ]
+    },
+    {
+        id: 'db-4',
+        name: 'Structural Integrity',
+        tiles: [
+            { id: 't-14', type: 'airframe_stress_chart', gridSpan: 7 },
+            { id: 't-15', type: 'model_3d', gridSpan: 5 },
+            { id: 't-16', type: 'metric', metricId: 'sh-1', gridSpan: 4 },
+            { id: 't-17', type: 'metric', metricId: 'sh-2', gridSpan: 4 },
+            { id: 't-18', type: 'metric', metricId: 'sh-3', gridSpan: 4 },
+        ]
+    },
+    {
+        id: 'db-5',
+        name: 'Pilot Health & Performance',
+        tiles: [
+            { id: 't-19', type: 'pilot_fatigue_trend', gridSpan: 12 },
+            { id: 't-20', type: 'gauge', metricId: 'pilot-fatigue-index', gridSpan: 4 },
+            { id: 't-21', type: 'metric', metricId: 'total-flight-hours', gridSpan: 4 },
+            { id: 't-22', type: 'metric', metricId: 'kaan-hours', gridSpan: 4 },
+        ]
+    },
+    {
+        id: 'db-6',
+        name: 'Fleet Readiness',
+        tiles: [
+            { id: 't-23', type: 'aircraft_list', gridSpan: 12 },
+            { id: 't-24', type: 'faults_by_system', gridSpan: 6 },
+            { id: 't-25', type: 'maintenance_list', gridSpan: 6 },
+        ]
+    },
+    {
+        id: 'db-7',
+        name: 'Cross-Fleet System Comparison',
+        tiles: [
+            { id: 't-26', type: 'radar_chart', gridSpan: 12 },
+            { id: 't-27', type: 'shi_trend', gridSpan: 8 },
+            { id: 't-28', type: 'faults_by_system', gridSpan: 4 },
+        ]
+    },
+    {
+        id: 'db-8',
+        name: 'AI & Analytics Hub',
+        tiles: [
+            { id: 't-29', type: 'ai_summary', gridSpan: 12 },
+            { id: 't-30', type: 'line_chart', title: 'Custom Trend Analysis', gridSpan: 4 },
+            { id: 't-31', type: 'bar_chart', title: 'Custom Bar Chart', gridSpan: 4 },
+            { id: 't-32', type: 'pie_chart', title: 'Custom Pie Chart', gridSpan: 4 },
+        ]
+    },
+    {
+        id: 'db-9',
+        name: 'Engine Performance Monitoring',
+        tiles: [
+            { id: 't-33', type: 'engine_vibration', gridSpan: 12 },
+            { id: 't-34', type: 'heatmap', gridSpan: 12 },
+        ]
+    },
+    {
+        id: 'db-10',
+        name: 'Logistics & Maintenance Planning',
+        tiles: [
+            { id: 't-35', type: 'maintenance_list', gridSpan: 12 },
+            { id: 't-36', type: 'metric', metricId: 'rul-forecast', gridSpan: 6 },
+            { id: 't-37', type: 'metric', metricId: 'aog-events', gridSpan: 6 },
+        ]
+    },
+    {
+        id: 'db-11',
+        name: 'Daily Standup Briefing',
+        tiles: [
+            { id: 't-38', type: 'metric', metricId: 'mc-rate', gridSpan: 4 },
+            { id: 't-39', type: 'gauge', metricId: 'fleet-availability', gridSpan: 4 },
+            { id: 't-40', type: 'metric', metricId: 'aog-events', gridSpan: 4 },
+            { id: 't-41', type: 'aircraft_list', gridSpan: 6 },
+            { id: 't-42', type: 'maintenance_list', gridSpan: 6 },
+        ]
+    },
+    {
+        id: 'db-12',
+        name: 'Advanced Diagnostics',
+        tiles: [
+            { id: 't-43', type: 'faults_by_system', gridSpan: 6 },
+            { id: 't-44', type: 'heatmap', gridSpan: 6 },
+            { id: 't-45', type: 'engine_vibration', gridSpan: 12 },
+            { id: 't-46', type: 'ai_summary', gridSpan: 12 },
+            { id: 't-47', type: 'area_chart', title: 'Custom Area Chart', gridSpan: 12 },
+        ]
     }
 ];
 
@@ -199,15 +337,39 @@ export const INITIAL_CHARTS: ChartConfig[] = [
         dataSourceId: 'fault-data',
         chartType: 'bar',
         xAxisField: 'system',
-        yAxisField: 'faultCount'
+        yAxisFields: ['faultCount']
     },
     {
         id: 'chart-2',
-        name: 'Vibration Trend - ENG-01',
+        name: 'Engine Telemetry Trend',
         dataSourceId: 'engine-vibration',
         chartType: 'line',
         xAxisField: 'date',
-        yAxisField: 'vibrationRms'
+        yAxisFields: ['vibrationRms', 'egt']
+    },
+    {
+        id: 'chart-3',
+        name: 'Fault Severity Distribution',
+        dataSourceId: 'fault-data',
+        chartType: 'pie',
+        xAxisField: 'system',
+        yAxisFields: ['severity']
+    },
+    {
+        id: 'chart-4',
+        name: 'Vibration vs EGT',
+        dataSourceId: 'engine-vibration',
+        chartType: 'scatter',
+        xAxisField: 'egt',
+        yAxisFields: ['vibrationRms']
+    },
+    {
+        id: 'chart-5',
+        name: 'System Health Comparison',
+        dataSourceId: 'system-health-comparison',
+        chartType: 'radar',
+        xAxisField: 'subject',
+        yAxisFields: ['KAAN-001', 'KAAN-002', 'KAAN-003', 'KAAN-004']
     }
 ];
 
@@ -234,6 +396,19 @@ export const CHART_DATA_SOURCES: DataSource[] = [
             { id: 'egt', name: 'EGT (°C)', type: 'value' },
             { id: 'engineId', name: 'Engine ID', type: 'category' },
         ]
+    },
+    {
+        id: 'system-health-comparison',
+        name: 'System Health Comparison Data',
+        description: 'Health indices for major systems across the fleet.',
+        icon: 'Radar',
+        fields: [
+            { id: 'subject', name: 'System', type: 'category' },
+            { id: 'KAAN-001', name: 'KAAN-001', type: 'value' },
+            { id: 'KAAN-002', name: 'KAAN-002', type: 'value' },
+            { id: 'KAAN-003', name: 'KAAN-003', type: 'value' },
+            { id: 'KAAN-004', name: 'KAAN-004', type: 'value' },
+        ]
     }
 ];
 
@@ -252,6 +427,12 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
         { date: '2023-10-04', vibrationRms: 0.15, egt: 855, engineId: 'ENG-01' },
         { date: '2023-10-05', vibrationRms: 0.16, egt: 858, engineId: 'ENG-01' },
         { date: '2023-10-06', vibrationRms: 0.18, egt: 860, engineId: 'ENG-01' },
+    ],
+    'system-health-comparison': [
+      { subject: 'Avionics', 'KAAN-001': 99, 'KAAN-002': 95, 'KAAN-003': 96, 'KAAN-004': 99 },
+      { subject: 'Propulsion', 'KAAN-001': 97, 'KAAN-002': 45, 'KAAN-003': 94, 'KAAN-004': 98 },
+      { subject: 'Hydraulics', 'KAAN-001': 85, 'KAAN-002': 92, 'KAAN-003': 78, 'KAAN-004': 99 },
+      { subject: 'Airframe', 'KAAN-001': 99, 'KAAN-002': 98, 'KAAN-003': 88, 'KAAN-004': 100 },
     ]
 };
 
@@ -296,9 +477,9 @@ export const MOCK_MAINTENANCE_DATA: MaintenanceItem[] = [
 ];
 
 export const STRUCTURAL_HEALTH_METRICS = {
-    fuselageFatigue: { id: 'sh-1', title: 'Fuselage Fatigue Life', value: '78', unit: '% Used', status: 'nominal', description: 'Percentage of calculated fuselage fatigue life consumed.' } as Metric,
-    wingStressCycles: { id: 'sh-2', title: 'Wing Stress Cycles', value: '65,234', unit: 'Cycles', status: 'nominal', description: 'Number of high-stress cycles recorded on wing spars.' } as Metric,
-    landingGearIntegrity: { id: 'sh-3', title: 'Landing Gear Integrity', value: '99.8', unit: '% Health', status: 'nominal', description: 'Health index based on landing impact sensor data.' } as Metric,
+    fuselageFatigue,
+    wingStressCycles,
+    landingGearIntegrity,
 };
 
 export const PORT_ENGINE_DATA = Array.from({ length: 50 }, (_, i) => ({

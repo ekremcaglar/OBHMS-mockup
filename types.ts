@@ -139,7 +139,7 @@ export interface Dashboard {
   tiles: Tile[];
 }
 
-export type ChartType = 'bar' | 'line' | 'scatter' | 'pie';
+export type ChartType = 'bar' | 'line' | 'scatter' | 'pie' | 'radar';
 
 export interface ChartConfig {
     id: string;
@@ -147,7 +147,7 @@ export interface ChartConfig {
     dataSourceId: string | null;
     chartType: ChartType;
     xAxisField: string | null;
-    yAxisField: string | null;
+    yAxisFields: string[] | null;
     color?: string;
 }
 

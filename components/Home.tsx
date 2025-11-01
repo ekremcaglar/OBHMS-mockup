@@ -41,7 +41,6 @@ const Home: React.FC<HomeProps> = ({ setCurrentPage, onSearchSubmit, onAircraftS
         <div className="space-y-12">
             {/* Header section */}
             <div className="text-center">
-                <img src="/assets/logo.svg" alt="TUSAŞ Logo" className="mx-auto h-16 mb-6 dark:invert" />
                 <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl mb-4">{t('obhms_title')}</h1>
                 <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">{t('obhms_subtitle')}</p>
                 <form onSubmit={handleSearch} className="mt-8 max-w-2xl mx-auto flex rounded-full shadow-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 focus-within:ring-2 focus-within:ring-sky-500 transition-all">

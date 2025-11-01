@@ -172,6 +172,17 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                             <option value="en">EN</option>
                             <option value="tr">TR</option>
                         </select>
+                        <div className="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+                        <button className="relative p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                            <Icon name="Bell" className="w-5 h-5" />
+                            <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                            </span>
+                        </button>
+                        <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                            <Icon name="User" className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                        </div>
                     </div>
                 </div>
             </div>

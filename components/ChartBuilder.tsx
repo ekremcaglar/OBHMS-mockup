@@ -2,7 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { ChartConfig } from '../types';
 import { INITIAL_CHARTS, CHART_DATA_SOURCES, MOCK_CHART_DATA } from '../constants';
 import { Plus, Trash2, Edit3, Save, X } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { 
+    BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, ScatterChart, Scatter, 
+    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis
+} from 'recharts';
 import FormSelect from './forms/FormSelect';
 import { useI18n } from '../context/I18nContext';
 
@@ -29,7 +33,7 @@ const ChartBuilder: React.FC = () => {
             dataSourceId: null,
             chartType: 'bar',
             xAxisField: null,
-            yAxisField: null,
+            yAxisFields: [],
         };
         setCharts([...charts, newChart]);
         setActiveChartId(newId);
@@ -65,7 +69,7 @@ const ChartBuilder: React.FC = () => {
         
         if (field === 'dataSourceId') {
             newConfig.xAxisField = null;
-            newConfig.yAxisField = null;
+            newConfig.yAxisFields = [];
         }
         
         setTempConfig(newConfig);
@@ -75,12 +79,21 @@ const ChartBuilder: React.FC = () => {
         if (!tempConfig) return;
         setCharts(charts.map(c => c.id === tempConfig.id ? tempConfig : c));
     };
+    
+    const handleYFieldToggle = (fieldId: string) => {
+        if (!tempConfig) return;
+        const newYFields = tempConfig.yAxisFields?.includes(fieldId)
+            ? tempConfig.yAxisFields.filter(id => id !== fieldId)
+            : [...(tempConfig.yAxisFields || []), fieldId];
+        handleConfigChange('yAxisFields', newYFields);
+    };
+
 
     const activeDataSource = CHART_DATA_SOURCES.find(ds => ds.id === tempConfig?.dataSourceId);
     const chartData = tempConfig?.dataSourceId ? MOCK_CHART_DATA[tempConfig.dataSourceId] : [];
 
     const renderChartPreview = () => {
-        if (!tempConfig || !tempConfig.dataSourceId || !tempConfig.xAxisField || !tempConfig.yAxisField) {
+        if (!tempConfig || !tempConfig.dataSourceId || !tempConfig.xAxisField || !tempConfig.yAxisFields || tempConfig.yAxisFields.length === 0) {
             return <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-500">{t('configure_chart_to_see_preview')}</div>;
         }
 
@@ -89,7 +102,7 @@ const ChartBuilder: React.FC = () => {
             margin: { top: 5, right: 20, left: 0, bottom: 5 },
         };
         
-        const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088fe'];
+        const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088fe', '#00C49F'];
         const tickColor = document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280';
         const gridColor = document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb';
         const tooltipStyle = {
@@ -99,44 +112,65 @@ const ChartBuilder: React.FC = () => {
 
         return (
             <ResponsiveContainer width="100%" height="100%">
-                {tempConfig.chartType === 'bar' && (
-                    <BarChart {...commonProps}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                        <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
-                        <YAxis stroke={tickColor} fontSize={12} />
-                        <Tooltip contentStyle={tooltipStyle} />
-                        <Legend />
-                        <Bar dataKey={tempConfig.yAxisField} fill={tempConfig.color || '#8884d8'} />
-                    </BarChart>
-                )}
-                {tempConfig.chartType === 'line' && (
-                     <LineChart {...commonProps}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                        <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
-                        <YAxis stroke={tickColor} fontSize={12} />
-                        <Tooltip contentStyle={tooltipStyle} />
-                        <Legend />
-                        <Line type="monotone" dataKey={tempConfig.yAxisField} stroke={tempConfig.color || '#82ca9d'} />
-                    </LineChart>
-                )}
-                 {tempConfig.chartType === 'scatter' && (
-                     <ScatterChart {...commonProps}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                        <XAxis type="category" dataKey={tempConfig.xAxisField} name={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
-                        <YAxis type="number" dataKey={tempConfig.yAxisField} name={tempConfig.yAxisField} stroke={tickColor} fontSize={12} />
-                        <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={tooltipStyle} />
-                        <Scatter name="Data" dataKey={tempConfig.yAxisField} fill={tempConfig.color || '#ffc658'} />
-                    </ScatterChart>
-                )}
-                 {tempConfig.chartType === 'pie' && (
-                    <PieChart>
-                        <Pie data={chartData} dataKey={tempConfig.yAxisField} nameKey={tempConfig.xAxisField} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
-                             {chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
-                        </Pie>
-                        <Tooltip contentStyle={tooltipStyle}/>
-                        <Legend />
-                    </PieChart>
-                )}
+                <>
+                    {tempConfig.chartType === 'bar' && (
+                        <BarChart {...commonProps}>
+                            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                            <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                            <YAxis stroke={tickColor} fontSize={12} />
+                            <Tooltip contentStyle={tooltipStyle} />
+                            <Legend />
+                            {tempConfig.yAxisFields.map((field, index) => (
+                                <Bar key={field} dataKey={field} name={activeDataSource?.fields.find(f => f.id === field)?.name || field} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </BarChart>
+                    )}
+                    {tempConfig.chartType === 'line' && (
+                        <LineChart {...commonProps}>
+                            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                            <XAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                            <YAxis stroke={tickColor} fontSize={12} />
+                            <Tooltip contentStyle={tooltipStyle} />
+                            <Legend />
+                            {tempConfig.yAxisFields.map((field, index) => (
+                                <Line key={field} type="monotone" dataKey={field} name={activeDataSource?.fields.find(f => f.id === field)?.name || field} stroke={COLORS[index % COLORS.length]} />
+                            ))}
+                        </LineChart>
+                    )}
+                    {tempConfig.chartType === 'scatter' && (
+                        <ScatterChart {...commonProps}>
+                            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                            <XAxis type="category" dataKey={tempConfig.xAxisField} name={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                            <YAxis type="number" dataKey={tempConfig.yAxisFields[0]} name={tempConfig.yAxisFields[0]} stroke={tickColor} fontSize={12} />
+                            <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={tooltipStyle} />
+                            <Legend />
+                            {tempConfig.yAxisFields.map((field, index) => (
+                               <Scatter key={field} name={field} dataKey={field} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </ScatterChart>
+                    )}
+                    {tempConfig.chartType === 'pie' && (
+                        <PieChart>
+                            <Pie data={chartData} dataKey={tempConfig.yAxisFields[0]} nameKey={tempConfig.xAxisField} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" label>
+                                {chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                            </Pie>
+                            <Tooltip contentStyle={tooltipStyle}/>
+                            <Legend />
+                        </PieChart>
+                    )}
+                    {tempConfig.chartType === 'radar' && (
+                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+                            <PolarGrid stroke={gridColor} />
+                            <PolarAngleAxis dataKey={tempConfig.xAxisField} stroke={tickColor} fontSize={12} />
+                            <PolarRadiusAxis />
+                            <Tooltip contentStyle={tooltipStyle} />
+                            <Legend />
+                            {tempConfig.yAxisFields.map((field, index) => (
+                                <Radar key={field} name={field} dataKey={field} stroke={COLORS[index % COLORS.length]} fill={COLORS[index % COLORS.length]} fillOpacity={0.6} />
+                            ))}
+                        </RadarChart>
+                    )}
+                </>
             </ResponsiveContainer>
         );
     };
@@ -204,6 +238,7 @@ const ChartBuilder: React.FC = () => {
                                 <option value="line">Line</option>
                                 <option value="scatter">Scatter</option>
                                 <option value="pie">Pie</option>
+                                <option value="radar">Radar</option>
                             </FormSelect>
                             <FormSelect label={t('data_source')} value={tempConfig.dataSourceId || ''} onChange={e => handleConfigChange('dataSourceId', e.target.value)}>
                                 <option value="" disabled>{t('select_source')}</option>
@@ -215,18 +250,21 @@ const ChartBuilder: React.FC = () => {
                                         <option value="" disabled>{t('select_field')}</option>
                                         {activeDataSource.fields.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                                     </FormSelect>
-                                    <FormSelect label="Y-Axis" value={tempConfig.yAxisField || ''} onChange={e => handleConfigChange('yAxisField', e.target.value)}>
-                                        <option value="" disabled>{t('select_field')}</option>
-                                        {activeDataSource.fields.filter(f => f.type === 'value').map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
-                                    </FormSelect>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{t('color')}</label>
-                                        <input
-                                            type="color"
-                                            value={tempConfig.color || '#8884d8'}
-                                            onChange={(e) => handleConfigChange('color', e.target.value)}
-                                            className="w-full h-10 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md p-1"
-                                        />
+                                        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{t('y_axis_fields')}</label>
+                                        <div className="space-y-2 max-h-48 overflow-y-auto pr-2 rounded-md bg-gray-100 dark:bg-slate-700/50 p-3">
+                                            {activeDataSource.fields.filter(f => f.type === 'value').map(field => (
+                                                <label key={field.id} className="flex items-center space-x-3 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={tempConfig.yAxisFields?.includes(field.id) ?? false}
+                                                        onChange={() => handleYFieldToggle(field.id)}
+                                                        className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-sky-600 focus:ring-sky-500 bg-gray-200 dark:bg-slate-800"
+                                                    />
+                                                    <span className="text-sm text-gray-700 dark:text-gray-300">{field.name}</span>
+                                                </label>
+                                            ))}
+                                        </div>
                                     </div>
                                 </>
                             )}

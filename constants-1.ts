@@ -1,4 +1,5 @@
 
+
 import { FleetData, Metric, Dashboard, ChartConfig, DataSource, Shortcut, Announcement, NewsItem } from './types';
 
 // Metrics
@@ -209,7 +210,8 @@ export const INITIAL_CHARTS: ChartConfig[] = [
         dataSourceId: 'fault-data',
         chartType: 'bar',
         xAxisField: 'system',
-        yAxisField: 'faultCount'
+        // FIX: The property 'yAxisField' was incorrect. Changed to 'yAxisFields' and wrapped the value in an array to match the updated 'ChartConfig' type, enabling multi-series charts.
+        yAxisFields: ['faultCount']
     },
     {
         id: 'chart-2',
@@ -217,7 +219,8 @@ export const INITIAL_CHARTS: ChartConfig[] = [
         dataSourceId: 'engine-vibration',
         chartType: 'line',
         xAxisField: 'date',
-        yAxisField: 'vibrationRms'
+        // FIX: The property 'yAxisField' was incorrect. Changed to 'yAxisFields' and wrapped the value in an array to match the updated 'ChartConfig' type, enabling multi-series charts.
+        yAxisFields: ['vibrationRms']
     }
 ];
 

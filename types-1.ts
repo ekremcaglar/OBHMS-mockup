@@ -66,7 +66,8 @@ export interface ChartConfig {
     dataSourceId: string | null;
     chartType: ChartType;
     xAxisField: string | null;
-    yAxisField: string | null;
+    // FIX: Replaced 'yAxisField' with 'yAxisFields' to support multiple data series on the y-axis, aligning with modern charting requirements and fixing type errors.
+    yAxisFields: string[] | null;
 }
 
 export interface DataSource {
