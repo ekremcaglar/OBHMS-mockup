@@ -442,6 +442,7 @@ export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-2', title: 'Health Monitoring', icon: 'HeartPulse', targetApp: 'Health' },
     { id: 'sc-3', title: 'Chart Builder', icon: 'AreaChart', targetApp: 'Chart Builder' },
     { id: 'sc-4', title: 'Reports', icon: 'FileText', targetApp: 'Reports' },
+    { id: 'sc-6', title: 'User Roles', icon: 'Users', targetApp: 'UserRoles' },
     { id: 'sc-5', title: 'Help', icon: 'HelpCircle', targetApp: 'Help' },
 ];
 

@@ -3,14 +3,16 @@ import {
   Search, ChevronDown, ArrowLeft, Printer, Plus, Trash2, Edit3, Save, X, Check, Layout,
   Settings, LayoutDashboard, HeartPulse, AreaChart, FileText, LoaderCircle, Sparkles,
   AlertTriangle, Info, CheckCircle, Plane, Wrench, TrendingUp, FileCheck2, ArrowUp, ArrowDown, Minus,
-  ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle
+  ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle,
+  Users
 } from 'lucide-react';
 
 const icons: { [key: string]: React.ElementType } = {
   Search, ChevronDown, ArrowLeft, Printer, Plus, Trash2, Edit3, Save, X, Check, Layout,
   Settings, LayoutDashboard, HeartPulse, AreaChart, FileText, LoaderCircle, Sparkles,
   AlertTriangle, Info, CheckCircle, Plane, Wrench, TrendingUp, FileCheck2, ArrowUp, ArrowDown, Minus,
-  ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle
+  ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle,
+  Users
 };
 
 interface IconProps {
