@@ -8,7 +8,7 @@ import Health from './components/Health';
 import Administration from './components/Administration';
 import Reports from './components/Reports';
 import SearchResult from './components/SearchResult';
-import TCP from './components/TCP';
+import TCPPage from './components/TCP';
 import Analysis from './components/Analysis';
 import All from './components/All';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
@@ -17,6 +17,13 @@ import UserRolesPage from './components/UserRolesPage';
 import SoftwareRequirementsPage from './components/SoftwareRequirementsPage';
 import DashboardManualPage from './components/DashboardManualPage';
 import ChartBuilderManualPage from './components/ChartBuilderManualPage';
+import HealthMonitoringManualPage from './components/HealthMonitoringManualPage';
+import ReportsManualPage from './components/ReportsManualPage';
+import TCPManualPage from './components/TCPManualPage';
+import UISpecsManualPage from './components/UISpecsManualPage';
+import HomePageManualPage from './components/HomePageManualPage';
+import TopPanelManualPage from './components/TopPanelManualPage';
+import SoftwareArchitectureManualPage from './components/SoftwareArchitectureManualPage';
 import { MOCK_FLEET_DATA, INITIAL_DASHBOARDS, ADMIN_ROLES, ALL_SECTION_KEYS, SECTION_I18N_KEYS } from './constants';
 import { UserRole, Dashboard, HealthSubPage, AnalysisSubPage } from './types';
 import { generateSearchResponse } from './services/geminiService';
@@ -109,7 +116,7 @@ const App: React.FC = () => {
         case 'Analysis':
             return <Analysis subPage={analysisSubPage} />;
         case 'TCP':
-            return <TCP />;
+            return <TCPPage />;
         case 'All':
             return <All setCurrentPage={setCurrentPage} />;
         case 'Help':
@@ -118,10 +125,24 @@ const App: React.FC = () => {
             return <UserRolesPage />;
         case 'Requirements':
             return <SoftwareRequirementsPage />;
+        case 'HomeManual':
+            return <HomePageManualPage />;
         case 'DashboardManual':
             return <DashboardManualPage />;
         case 'ChartBuilderManual':
             return <ChartBuilderManualPage />;
+        case 'HealthMonitoringManual':
+            return <HealthMonitoringManualPage />;
+        case 'ReportsManual':
+            return <ReportsManualPage />;
+        case 'TCPManual':
+            return <TCPManualPage />;
+        case 'UISpecsManual':
+            return <UISpecsManualPage />;
+        case 'TopPanelManual':
+            return <TopPanelManualPage />;
+        case 'ArchitectureManual':
+            return <SoftwareArchitectureManualPage />;
         case 'SearchResult':
              return searchState.isLoading 
                 ? <div className="text-center text-gray-400 mt-20">{t('analyzing_data')}...</div>

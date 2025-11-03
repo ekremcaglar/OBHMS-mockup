@@ -69,7 +69,7 @@ const NewTcpModal: React.FC<{ isOpen: boolean; onClose: () => void; onAdd: (tcp:
     );
 };
 
-const TCP: React.FC = () => {
+const TCPPage: React.FC = () => {
     const { t } = useI18n();
     const [tcps, setTcps] = useState<TCP[]>(MOCK_TCP_DATA);
     const [searchTerm, setSearchTerm] = useState('');
@@ -199,4 +199,4 @@ const TCP: React.FC = () => {
     );
 };
 
-export default TCP;
+export default TCPPage;

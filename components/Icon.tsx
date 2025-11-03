@@ -4,7 +4,7 @@ import {
   Settings, LayoutDashboard, HeartPulse, AreaChart, FileText, LoaderCircle, Sparkles,
   AlertTriangle, Info, CheckCircle, Plane, Wrench, TrendingUp, FileCheck2, ArrowUp, ArrowDown, Minus,
   ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle,
-  Users, ClipboardList, BookOpen, BarChartHorizontal
+  Users, ClipboardList, BookOpen, BarChartHorizontal, Stethoscope, FilePieChart, Palette, NotebookText, PanelTop, Component
 } from 'lucide-react';
 
 const icons: { [key: string]: React.ElementType } = {
@@ -12,7 +12,7 @@ const icons: { [key: string]: React.ElementType } = {
   Settings, LayoutDashboard, HeartPulse, AreaChart, FileText, LoaderCircle, Sparkles,
   AlertTriangle, Info, CheckCircle, Plane, Wrench, TrendingUp, FileCheck2, ArrowUp, ArrowDown, Minus,
   ShieldAlert, RadioTower, Activity, Rotate3d, ZoomIn, ZoomOut, Move3d, User, LayoutGrid, Bell, Radar, HelpCircle,
-  Users, ClipboardList, BookOpen, BarChartHorizontal
+  Users, ClipboardList, BookOpen, BarChartHorizontal, Stethoscope, FilePieChart, Palette, NotebookText, PanelTop, Component
 };
 
 interface IconProps {

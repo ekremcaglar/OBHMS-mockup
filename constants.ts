@@ -444,8 +444,15 @@ export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-4', title: 'Reports', icon: 'FileText', targetApp: 'Reports' },
     { id: 'sc-6', title: 'User Roles', icon: 'Users', targetApp: 'UserRoles' },
     { id: 'sc-7', title: 'Requirements', icon: 'ClipboardList', targetApp: 'Requirements' },
+    { id: 'sc-14', title: 'Home Page Manual', icon: 'NotebookText', targetApp: 'HomeManual' },
+    { id: 'sc-15', title: 'Top Panel Manual', icon: 'PanelTop', targetApp: 'TopPanelManual' },
     { id: 'sc-8', title: 'Dashboard Manual', icon: 'BookOpen', targetApp: 'DashboardManual' },
     { id: 'sc-9', title: 'Chart Builder Manual', icon: 'BarChartHorizontal', targetApp: 'ChartBuilderManual' },
+    { id: 'sc-10', title: 'Health Monitoring Manual', icon: 'Stethoscope', targetApp: 'HealthMonitoringManual' },
+    { id: 'sc-11', title: 'Reports Manual', icon: 'FilePieChart', targetApp: 'ReportsManual' },
+    { id: 'sc-12', title: 'TCP Manual', icon: 'FileCheck2', targetApp: 'TCPManual' },
+    { id: 'sc-13', title: 'UI/UX Specs', icon: 'Palette', targetApp: 'UISpecsManual' },
+    { id: 'sc-16', title: 'Software Architecture', icon: 'Component', targetApp: 'ArchitectureManual' },
     { id: 'sc-5', title: 'Help', icon: 'HelpCircle', targetApp: 'Help' },
 ];
 
