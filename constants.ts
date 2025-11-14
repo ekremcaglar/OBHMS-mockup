@@ -854,6 +854,17 @@ export const PILLARS_DATA = [
   }
 ];
 
+export const MOCK_RELIABILITY_DATA = {
+  mtbf: 500,
+  mttr: 5,
+  systems: [
+    { name: 'Avionics', mtbf: 600, mttr: 4, availability: 99.3 },
+    { name: 'Propulsion', mtbf: 400, mttr: 8, availability: 98.0 },
+    { name: 'Hydraulics', mtbf: 800, mttr: 3, availability: 99.6 },
+    { name: 'Airframe', mtbf: 1200, mttr: 2, availability: 99.8 },
+  ],
+};
+
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
 export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));
