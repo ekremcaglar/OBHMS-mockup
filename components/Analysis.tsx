@@ -6,6 +6,7 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
+import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
 import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
 import DigitalTwinAnalysis from './analysis/DigitalTwinAnalysis';
 import OperationalAnalysis from './analysis/OperationalAnalysis';
@@ -106,6 +107,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
+            case 'Reliability Analysis':
+                return <ReliabilityAnalysis />;
             case 'Anomaly Detection Analysis':
                 return <AnomalyDetectionAnalysis title={getTitle()} />;
             case 'Digital Twin Analysis':
