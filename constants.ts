@@ -357,6 +357,29 @@ export const INITIAL_DASHBOARDS: Dashboard[] = [
             { id: 'stage', name: 'Stage', type: 'category' },
             { id: 'dataVolume', name: 'Data Volume (GB)', type: 'value' },
         ]
+    },
+    {
+        id: 'feature-engineering-data',
+        name: 'Engine Feature Correlation',
+        description: 'Correlation between different engineered features from engine data.',
+        icon: 'Cpu',
+        fields: [
+            { id: 'vibrationRms', name: 'Vibration (RMS)', type: 'value' },
+            { id: 'peakToPeak', name: 'Peak-to-Peak', type: 'value' },
+            { id: 'kurtosis', name: 'Kurtosis', type: 'value' },
+            { id: 'crestFactor', name: 'Crest Factor', type: 'value' },
+        ]
+    },
+    {
+        id: 'transient-event-data',
+        name: 'Landing Gear Transient Event',
+        description: 'High-frequency data captured during a landing gear deployment event.',
+        icon: 'Zap',
+        fields: [
+            { id: 'time', name: 'Time (ms)', type: 'value' },
+            { id: 'amplitude', name: 'Amplitude', type: 'value' },
+            { id: 'baseline', name: 'Baseline', type: 'value' },
+        ]
     }
 ];
 
@@ -486,6 +509,50 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
         { stage: 'Standardize', dataVolume: 410 },
         { stage: 'Store', dataVolume: 400 },
     ],
+    'feature-engineering-data': Array.from({ length: 50 }, () => ({
+        vibrationRms: Math.random() * 2,
+        peakToPeak: Math.random() * 5,
+        kurtosis: 3 + Math.random() * 2,
+        crestFactor: 1.5 + Math.random(),
+    })),
+    'transient-event-data': Array.from({ length: 100 }, (_, i) => {
+        const baseline = 1 + Math.sin(i / 10) * 0.2;
+        let amplitude = baseline + (Math.random() - 0.5) * 0.1;
+        if (i > 40 && i < 50) {
+            amplitude += Math.sin((i - 40) * Math.PI / 10) * 3;
+        }
+        return { time: i * 2, amplitude, baseline };
+    }),
+};
+
+export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
+    'fl-2': {
+        symptoms: [
+            "Hydraulic Pressure Warning Light On",
+            "Slow landing gear deployment reported by pilot",
+            "Telemetry shows pressure drop in port-side hydraulic line during high-G maneuvers"
+        ],
+        probableCauses: [
+            {
+                component: "Hydraulic Line P-78B",
+                reasoning: "Stress analysis indicates this line is prone to fatigue cracks. Recent flight profiles involved high stress.",
+                probability: 0.75,
+                source: "Physics-Based Model"
+            },
+            {
+                component: "Reservoir Pressure Sensor",
+                reasoning: "Sensor has a history of intermittent failures across the fleet. Could be a false positive.",
+                probability: 0.20,
+                source: "Historical Data"
+            },
+            {
+                component: "Hydraulic Pump Assembly",
+                reasoning: "Pump is nearing its scheduled maintenance interval, but shows no other signs of degradation.",
+                probability: 0.05,
+                source: "Maintenance Records"
+            }
+        ]
+    }
 };
 
 // Home Page Data
@@ -661,7 +728,6 @@ export const MOCK_FAULT_LOGS = [
   { id: 'fl-5', timestamp: '2023-10-24 16:45', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0301', description: 'Cylinder 1 Misfire Detected', severity: 'High' },
   { id: 'fl-6', timestamp: '2023-10-23 09:05', aircraft: 'KAAN-004', system: 'ECS', code: 'E1005', description: 'Cabin Pressure Sensor Drift', severity: 'Low' },
 ];
-
 export const ADMIN_ROLES: UserRole[] = [
   'OBHMS Administrator / System Owner',
   'Security Officer',
