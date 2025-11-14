@@ -112,10 +112,6 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                <Icon name="TrendingUp" className="w-8 h-8" />
-                {getTitle()}
-            </h1>
             {renderSubPage()}
         </div>
     );
