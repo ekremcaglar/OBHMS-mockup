@@ -84,9 +84,20 @@ const kaanHours: Metric = {
     status: 'nominal',
 };
 
+const missionSuccessLikelihood: Metric = {
+    id: 'mission-success-likelihood',
+    title: 'Mission Success Likelihood',
+    description: 'Predicted likelihood of mission success based on current aircraft health and operational parameters.',
+    value: '95',
+    unit: '%',
+    status: 'nominal',
+    trend: 'up',
+};
+
 
 export const METRICS_MAP = new Map<string, Metric>([
   ['mc-rate', missionCapableRate],
+  ['mission-success-likelihood', missionSuccessLikelihood],
   ['fleet-availability', fleetAvailability],
   ['nff-rate', nffRate],
   ['aog-events', aogEvents],
@@ -206,6 +217,21 @@ export const SHI_TREND_DATA = [
   { week: 'W-2', shi: 89.9 },
   { week: 'W-1', shi: 88.7 },
 ];
+
+export const OPERATIONAL_FORECAST_DATA = {
+    'engine-temp': Array.from({ length: 12 }, (_, i) => ({
+        month: `M+${i + 1}`,
+        forecast: 870 + Math.random() * 20 - 10,
+        upperBound: 890 + Math.random() * 5,
+        lowerBound: 850 - Math.random() * 5,
+    })),
+    'hydraulic-pressure': Array.from({ length: 12 }, (_, i) => ({
+        month: `M+${i + 1}`,
+        forecast: 3000 + Math.random() * 100 - 50,
+        upperBound: 3100 + Math.random() * 20,
+        lowerBound: 2900 - Math.random() * 20,
+    })),
+};
 
 // Initial App State Data
 export const INITIAL_DASHBOARDS: Dashboard[] = [

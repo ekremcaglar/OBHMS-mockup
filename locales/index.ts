@@ -239,6 +239,8 @@ const en = {
   "section_training_simulator_interface_desc": "Connecting to and analyzing health data generated from ground-based simulators.",
   "section_cost_benefit_analysis_title": "Cost-Benefit Analysis Report Generator",
   "section_cost_benefit_analysis_desc": "Quantifying the realized cost savings from OBHMS-driven optimization.",
+  "section_predictive_analytics_title": "Predictive Analytics",
+  "section_predictive_analytics_desc": "Broad term encompassing RUL, but also forecasting future operational parameters and likelihood of mission success.",
 
   "pillar_data_management": "Data, System & Security Management",
   "section_user_admin_title": "User & Role Administration",
@@ -901,6 +903,8 @@ const tr = {
   "section_training_simulator_interface_desc": "Yer tabanlı simülatörlerden üretilen sağlık verilerine bağlanma ve analiz etme.",
   "section_cost_benefit_analysis_title": "Maliyet-Fayda Analizi Rapor Oluşturucu",
   "section_cost_benefit_analysis_desc": "OBHMS kaynaklı optimasyondan elde edilen maliyet tasarruflarını ölçme.",
+  "section_predictive_analytics_title": "Tahminsel Analitik",
+  "section_predictive_analytics_desc": "RUL'u kapsayan, aynı zamanda gelecekteki operasyonel parametreleri ve görev başarısı olasılığını tahmin eden geniş bir terim.",
 
   "pillar_data_management": "Veri, Sistem ve Güvenlik Yönetimi",
   "section_user_admin_title": "Kullanıcı ve Rol Yönetimi",
