@@ -6,6 +6,7 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
+import DigitalTwinAnalysis from './analysis/DigitalTwinAnalysis';
 import OperationalAnalysis from './analysis/OperationalAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
@@ -104,6 +105,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
+            case 'Digital Twin Analysis':
+                return <DigitalTwinAnalysis />;
             case 'Operational Analysis':
                 return <OperationalAnalysis />;
             default:
