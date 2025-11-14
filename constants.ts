@@ -327,6 +327,36 @@ export const INITIAL_DASHBOARDS: Dashboard[] = [
             { id: 't-46', type: 'ai_summary', gridSpan: 12 },
             { id: 't-47', type: 'area_chart', title: 'Custom Area Chart', gridSpan: 12 },
         ]
+    },
+    {
+        id: 'engine-vibration-fft',
+        name: 'Engine Vibration FFT',
+        description: 'Frequency domain analysis of engine vibration data.',
+        icon: 'WaveSquare',
+        fields: [
+            { id: 'frequency', name: 'Frequency (Hz)', type: 'category' },
+            { id: 'amplitude', name: 'Amplitude', type: 'value' },
+        ]
+    },
+    {
+        id: 'failure-trend-data',
+        name: 'Failure Trend Over Time',
+        description: 'Monthly failure counts for a specific component.',
+        icon: 'TrendingUp',
+        fields: [
+            { id: 'month', name: 'Month', type: 'category' },
+            { id: 'failures', name: 'Failures', type: 'value' },
+        ]
+    },
+    {
+        id: 'data-processing-pipeline',
+        name: 'Data Processing Pipeline',
+        description: 'Volume of data at each stage of the processing pipeline.',
+        icon: 'Database',
+        fields: [
+            { id: 'stage', name: 'Stage', type: 'category' },
+            { id: 'dataVolume', name: 'Data Volume (GB)', type: 'value' },
+        ]
     }
 ];
 
@@ -433,7 +463,29 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
       { subject: 'Propulsion', 'KAAN-001': 97, 'KAAN-002': 45, 'KAAN-003': 94, 'KAAN-004': 98 },
       { subject: 'Hydraulics', 'KAAN-001': 85, 'KAAN-002': 92, 'KAAN-003': 78, 'KAAN-004': 99 },
       { subject: 'Airframe', 'KAAN-001': 99, 'KAAN-002': 98, 'KAAN-003': 88, 'KAAN-004': 100 },
-    ]
+    ],
+    'engine-vibration-fft': Array.from({ length: 50 }, (_, i) => ({
+        frequency: i * 10,
+        amplitude: Math.random() * (i === 20 ? 5 : 1),
+    })),
+    'failure-trend-data': [
+        { month: 'Jan', failures: 2 },
+        { month: 'Feb', failures: 3 },
+        { month: 'Mar', failures: 2 },
+        { month: 'Apr', failures: 4 },
+        { month: 'May', failures: 5 },
+        { month: 'Jun', failures: 4 },
+        { month: 'Jul', failures: 6 },
+        { month: 'Aug', failures: 5 },
+    ],
+    'data-processing-pipeline': [
+        { stage: 'Ingest', dataVolume: 500 },
+        { stage: 'Clean', dataVolume: 450 },
+        { stage: 'Validate', dataVolume: 440 },
+        { stage: 'Align', dataVolume: 420 },
+        { stage: 'Standardize', dataVolume: 410 },
+        { stage: 'Store', dataVolume: 400 },
+    ],
 };
 
 // Home Page Data
