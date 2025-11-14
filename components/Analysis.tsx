@@ -6,10 +6,10 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
-import FaultIsolationAnalysis from './analysis/FaultIsolationAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
+import EngineHealth from './health/EngineHealth';
 import PlaceholderAnalysisPage from './analysis/PlaceholderAnalysisPage';
 
 interface AnalysisProps {
@@ -104,8 +104,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
-            case 'Fault Isolation Analysis':
-                return <FaultIsolationAnalysis />;
+            case 'Engine Health Management Analysis':
+                return <EngineHealth onAircraftSelect={() => {}} />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
@@ -115,6 +115,10 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
 
     return (
         <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                <Icon name="TrendingUp" className="w-8 h-8" />
+                {getTitle()}
+            </h1>
             {renderSubPage()}
         </div>
     );
