@@ -854,6 +854,12 @@ export const PILLARS_DATA = [
   }
 ];
 
+export const CROSS_AIRCRAFT_TREND_DATA = {
+  comparisonData: [
+    ...RADAR_CHART_DATA,
+  ],
+};
+
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
 export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));

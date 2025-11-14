@@ -13,6 +13,7 @@ import TCPPage from './components/TCP';
 import Analysis from './components/Analysis';
 import All from './components/All';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
+import CrossAircraftTrendComparison from './components/analysis/CrossAircraftTrendComparison';
 import HelpPage from './components/HelpPage';
 import UserRolesPage from './components/UserRolesPage';
 import SoftwareRequirementsPage from './components/SoftwareRequirementsPage';
@@ -169,6 +170,8 @@ const App: React.FC = () => {
                 );
             }
             return <Administration />;
+        case 'Cross-Aircraft Trend Comparison':
+            return <CrossAircraftTrendComparison />;
         default:
             return <Home setCurrentPage={setCurrentPage} onSearchSubmit={handleSearchSubmit} onAircraftSelect={handleAircraftSelect} />;
     }
