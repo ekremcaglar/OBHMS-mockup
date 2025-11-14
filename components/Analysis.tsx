@@ -7,6 +7,7 @@ import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
 import DigitalTwinAnalysis from './analysis/DigitalTwinAnalysis';
+import OperationalAnalysis from './analysis/OperationalAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -106,6 +107,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <DiagnosticAnalysis />;
             case 'Digital Twin Analysis':
                 return <DigitalTwinAnalysis />;
+            case 'Operational Analysis':
+                return <OperationalAnalysis />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
