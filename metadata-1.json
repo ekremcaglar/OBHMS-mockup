@@ -1,5 +1,0 @@
-{
-  "name": "KAAN OBHMS Dashboard",
-  "description": "A comprehensive dashboard for the Off-Board Health Management System (OBHMS) to provide predictive, actionable intelligence for the KAAN aircraft fleet. It visualizes key metrics for fleet readiness, maintenance, and prognostics.",
-  "requestFramePermissions": []
-}
