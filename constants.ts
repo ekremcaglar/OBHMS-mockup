@@ -555,6 +555,55 @@ export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
     }
 };
 
+export const MOCK_FAULT_ISOLATION_ANALYSIS: { [key: string]: any } = {
+    'fl-2': { // Corresponds to the 'Reservoir Pressure Low - Port' fault
+        recommendedLRUs: [
+            {
+                lruName: "Port Hydraulic Manifold",
+                partNumber: "HM-P-45C",
+                confidence: 0.85,
+                rationale: "Directly manages port-side hydraulic pressure and telemetry data originates from this unit.",
+                recommendedAction: "Perform functional check on all valves and sensors attached to this manifold. Check for internal leaks.",
+                potentialPLRUs: [
+                    {
+                        plruName: "Pressure Transducer #2",
+                        partNumber: "HM-P-45C-S2",
+                        confidence: 0.92,
+                        rationale: "This specific transducer is responsible for the pressure reading that triggered the fault.",
+                        toolsRequired: ["Digital Multimeter", "Pressure Gauge (0-5000 PSI)"],
+                        skillLevel: "Intermediate",
+                    },
+                    {
+                        plruName: "Solenoid Valve SV-3",
+                        partNumber: "HM-P-45C-V3",
+                        confidence: 0.45,
+                        rationale: "A stuck or slow-acting valve could cause a temporary pressure drop under load.",
+                        toolsRequired: ["Wrench Set", "Lockwire Pliers"],
+                        skillLevel: "Beginner",
+                    }
+                ]
+            },
+            {
+                lruName: "Main Hydraulic Pump Assembly",
+                partNumber: "MHP-01A",
+                confidence: 0.15,
+                rationale: "Less likely, as a pump failure would typically affect both port and starboard systems. However, a partial failure is possible.",
+                recommendedAction: "Monitor pump output pressure during system stress test. Listen for unusual acoustic signatures.",
+                potentialPLRUs: [
+                     {
+                        plruName: "Pump Internal Regulator",
+                        partNumber: "MHP-01A-R1",
+                        confidence: 0.30,
+                        rationale: "Internal regulation issues could cause pressure drops on one side.",
+                        toolsRequired: ["Hydraulic Test Stand"],
+                        skillLevel: "Advanced",
+                    }
+                ]
+            }
+        ]
+    }
+};
+
 // Home Page Data
 export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-1', title: 'Dashboards', icon: 'LayoutDashboard', targetApp: 'Dashboards' },
