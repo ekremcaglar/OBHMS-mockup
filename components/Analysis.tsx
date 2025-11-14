@@ -1,5 +1,11 @@
 import React from 'react';
 import TimeSeriesAnalysis from './analysis/TimeSeriesAnalysis';
+import FrequencyAnalysis from './analysis/FrequencyAnalysis';
+import TrendAnalysis from './analysis/TrendAnalysis';
+import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
+import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
+import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
+import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -85,6 +91,18 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
         switch (subPage) {
             case 'Time-Series Analysis':
                 return <TimeSeriesAnalysis />;
+            case 'Frequency Analysis':
+                return <FrequencyAnalysis />;
+            case 'Failure Trend Analysis':
+                return <TrendAnalysis />;
+            case 'Data Processing Analysis':
+                return <DataProcessingAnalysis />;
+            case 'Feature Engineering Analysis':
+                return <FeatureEngineeringAnalysis />;
+            case 'Transient Signature Analysis':
+                return <TransientSignatureAnalysis />;
+            case 'Diagnostic Analysis':
+                return <DiagnosticAnalysis />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
