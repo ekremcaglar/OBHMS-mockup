@@ -84,20 +84,9 @@ const kaanHours: Metric = {
     status: 'nominal',
 };
 
-const missionSuccessLikelihood: Metric = {
-    id: 'mission-success-likelihood',
-    title: 'Mission Success Likelihood',
-    description: 'Predicted likelihood of mission success based on current aircraft health and operational parameters.',
-    value: '95',
-    unit: '%',
-    status: 'nominal',
-    trend: 'up',
-};
-
 
 export const METRICS_MAP = new Map<string, Metric>([
   ['mc-rate', missionCapableRate],
-  ['mission-success-likelihood', missionSuccessLikelihood],
   ['fleet-availability', fleetAvailability],
   ['nff-rate', nffRate],
   ['aog-events', aogEvents],
@@ -217,21 +206,6 @@ export const SHI_TREND_DATA = [
   { week: 'W-2', shi: 89.9 },
   { week: 'W-1', shi: 88.7 },
 ];
-
-export const OPERATIONAL_FORECAST_DATA = {
-    'engine-temp': Array.from({ length: 12 }, (_, i) => ({
-        month: `M+${i + 1}`,
-        forecast: 870 + Math.random() * 20 - 10,
-        upperBound: 890 + Math.random() * 5,
-        lowerBound: 850 - Math.random() * 5,
-    })),
-    'hydraulic-pressure': Array.from({ length: 12 }, (_, i) => ({
-        month: `M+${i + 1}`,
-        forecast: 3000 + Math.random() * 100 - 50,
-        upperBound: 3100 + Math.random() * 20,
-        lowerBound: 2900 - Math.random() * 20,
-    })),
-};
 
 // Initial App State Data
 export const INITIAL_DASHBOARDS: Dashboard[] = [
@@ -581,55 +555,6 @@ export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
     }
 };
 
-export const MOCK_FAULT_ISOLATION_ANALYSIS: { [key: string]: any } = {
-    'fl-2': { // Corresponds to the 'Reservoir Pressure Low - Port' fault
-        recommendedLRUs: [
-            {
-                lruName: "Port Hydraulic Manifold",
-                partNumber: "HM-P-45C",
-                confidence: 0.85,
-                rationale: "Directly manages port-side hydraulic pressure and telemetry data originates from this unit.",
-                recommendedAction: "Perform functional check on all valves and sensors attached to this manifold. Check for internal leaks.",
-                potentialPLRUs: [
-                    {
-                        plruName: "Pressure Transducer #2",
-                        partNumber: "HM-P-45C-S2",
-                        confidence: 0.92,
-                        rationale: "This specific transducer is responsible for the pressure reading that triggered the fault.",
-                        toolsRequired: ["Digital Multimeter", "Pressure Gauge (0-5000 PSI)"],
-                        skillLevel: "Intermediate",
-                    },
-                    {
-                        plruName: "Solenoid Valve SV-3",
-                        partNumber: "HM-P-45C-V3",
-                        confidence: 0.45,
-                        rationale: "A stuck or slow-acting valve could cause a temporary pressure drop under load.",
-                        toolsRequired: ["Wrench Set", "Lockwire Pliers"],
-                        skillLevel: "Beginner",
-                    }
-                ]
-            },
-            {
-                lruName: "Main Hydraulic Pump Assembly",
-                partNumber: "MHP-01A",
-                confidence: 0.15,
-                rationale: "Less likely, as a pump failure would typically affect both port and starboard systems. However, a partial failure is possible.",
-                recommendedAction: "Monitor pump output pressure during system stress test. Listen for unusual acoustic signatures.",
-                potentialPLRUs: [
-                     {
-                        plruName: "Pump Internal Regulator",
-                        partNumber: "MHP-01A-R1",
-                        confidence: 0.30,
-                        rationale: "Internal regulation issues could cause pressure drops on one side.",
-                        toolsRequired: ["Hydraulic Test Stand"],
-                        skillLevel: "Advanced",
-                    }
-                ]
-            }
-        ]
-    }
-};
-
 // Home Page Data
 export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-1', title: 'Dashboards', icon: 'LayoutDashboard', targetApp: 'Dashboards' },
@@ -929,14 +854,9 @@ export const PILLARS_DATA = [
   }
 ];
 
-export const MOCK_RELIABILITY_DATA = {
-  mtbf: 500,
-  mttr: 5,
-  systems: [
-    { name: 'Avionics', mtbf: 600, mttr: 4, availability: 99.3 },
-    { name: 'Propulsion', mtbf: 400, mttr: 8, availability: 98.0 },
-    { name: 'Hydraulics', mtbf: 800, mttr: 3, availability: 99.6 },
-    { name: 'Airframe', mtbf: 1200, mttr: 2, availability: 99.8 },
+export const CROSS_AIRCRAFT_TREND_DATA = {
+  comparisonData: [
+    ...RADAR_CHART_DATA,
   ],
 };
 
