@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useI18n } from '../context/I18nContext';
+import Icon from './Icon';
 
 interface LoginProps {
     onLogin: () => void;
@@ -19,7 +20,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="flex items-center justify-center min-h-screen bg-[#101827]">
             <div className="w-full max-w-md p-8 space-y-8 bg-[#1d2939] rounded-lg shadow-lg">
                 <div className="text-center">
-                    <h1 className="text-4xl font-bold text-white sm:text-5xl mb-4">{t('obhms_title')}</h1>
+                    <div className="flex items-center justify-center space-x-3 mb-4">
+                        <Icon name="Plane" className="h-8 w-8 text-sky-500" />
+                        <span className="text-xl font-bold text-white tracking-wider whitespace-nowrap">KAAN OBHMS</span>
+                    </div>
                     <p className="text-lg text-gray-400">{t('login_to_account')}</p>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleLogin}>
