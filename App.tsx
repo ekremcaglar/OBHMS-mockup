@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Header from './components/Header';
 import Home from './components/Home';
+import Login from './components/Login';
 import AircraftDetailView from './components/AircraftDetailView';
 import ChartBuilder from './components/ChartBuilder';
 import Dashboards from './components/Dashboards';
@@ -36,6 +37,7 @@ interface SearchState {
 }
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('Home');
   const [selectedAircraftId, setSelectedAircraftId] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('System Engineering Lead');
@@ -46,6 +48,11 @@ const App: React.FC = () => {
   const [healthSubPage, setHealthSubPage] = useState<HealthSubPage>('Structural');
   const [analysisSubPage, setAnalysisSubPage] = useState<AnalysisSubPage>('Time-Series Analysis');
   const { t } = useI18n();
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    setCurrentPage('Home');
+  };
 
   const handleAircraftSelect = useCallback((id: string) => {
     setSelectedAircraftId(id);
@@ -167,6 +174,9 @@ const App: React.FC = () => {
     }
   };
 
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#101827] font-sans">
