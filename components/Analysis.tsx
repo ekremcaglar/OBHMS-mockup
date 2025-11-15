@@ -19,6 +19,7 @@ import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
 import PlaceholderAnalysisPage from './analysis/PlaceholderAnalysisPage';
+import StructuralHealthManagementAnalysis from './analysis/StructuralHealthManagementAnalysis';
 
 interface AnalysisProps {
     subPage: AnalysisSubPage;
@@ -130,6 +131,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <SystemOfSystemsContext />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
+            case 'Structural Health Management Analysis':
+                return <StructuralHealthManagementAnalysis />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
