@@ -681,6 +681,16 @@ export const HEATMAP_DATA = {
     ],
 };
 
+export const HEATMAP_DATA = {
+    labels: ['EGT', 'N1', 'Oil Press', 'Vibration'],
+    data: [
+      [1.00, 0.65, -0.32, 0.81],
+      [0.65, 1.00, -0.21, 0.75],
+      [-0.32, -0.21, 1.00, -0.40],
+      [0.81, 0.75, -0.40, 1.00],
+    ],
+};
+
 // New data for Structural Heatmap
 export const AIRFRAME_STRESS_HEATMAP_DATA = {
     labels: ['L-Wing Root', 'R-Wing Root', 'Fuselage-Fwd', 'Fuselage-Aft', 'Empennage'],
@@ -791,6 +801,7 @@ export const PILLARS_DATA = [
       { key: 'Mission Planning & Profiles', titleKey: 'section_mission_planning_title', descriptionKey: 'section_mission_planning_desc' },
       { key: 'Environmental & Operational Limits', titleKey: 'section_env_op_limits_title', descriptionKey: 'section_env_op_limits_desc' },
       { key: 'Statistical Process Control (SPC) Charts', titleKey: 'section_spc_charts_title', descriptionKey: 'section_spc_charts_desc' },
+      { key: 'Inter-Parameter Correlation', titleKey: 'section_inter_parameter_correlation_title', descriptionKey: 'section_inter_parameter_correlation_desc' },
       { key: 'Wear-out Rate Comparison', titleKey: 'section_wear_rate_comparison_title', descriptionKey: 'section_wear_rate_comparison_desc' },
       { key: 'Training Simulator Data Interface', titleKey: 'section_training_simulator_interface_title', descriptionKey: 'section_training_simulator_interface_desc' },
       { key: 'Cost-Benefit Analysis Report Generator', titleKey: 'section_cost_benefit_analysis_title', descriptionKey: 'section_cost_benefit_analysis_desc' },
