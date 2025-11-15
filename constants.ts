@@ -207,6 +207,21 @@ export const SHI_TREND_DATA = [
   { week: 'W-1', shi: 88.7 },
 ];
 
+export const OPERATIONAL_FORECAST_DATA = {
+  'engine-temp': Array.from({ length: 12 }, (_, i) => ({
+    month: `M+${i + 1}`,
+    forecast: 950 + Math.random() * 50 - 25,
+    upperBound: 980 + Math.random() * 20 - 10,
+    lowerBound: 920 + Math.random() * 20 - 10,
+  })),
+  'hydraulic-pressure': Array.from({ length: 12 }, (_, i) => ({
+    month: `M+${i + 1}`,
+    forecast: 3000 + Math.random() * 100 - 50,
+    upperBound: 3100 + Math.random() * 50 - 25,
+    lowerBound: 2900 + Math.random() * 50 - 25,
+  })),
+};
+
 // Initial App State Data
 export const INITIAL_DASHBOARDS: Dashboard[] = [
     {

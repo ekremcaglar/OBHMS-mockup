@@ -4,7 +4,7 @@ import Icon from './Icon';
 import MetricCard from './MetricCard';
 import { METRICS_MAP, OPERATIONAL_FORECAST_DATA } from '../constants';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { FleetAvailabilityGauge } from './charts/FleetAvailabilityGauge';
+import FleetAvailabilityGauge from './charts/FleetAvailabilityGauge';
 
 const PredictiveAnalytics: React.FC<{ title: string; description: string }> = ({ title, description }) => {
     const rulMetric = METRICS_MAP.get('rul-forecast');
