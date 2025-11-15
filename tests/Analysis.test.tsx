@@ -11,7 +11,7 @@ jest.mock('../components/analysis/DataProcessingAnalysis', () => () => <div>Data
 jest.mock('../components/analysis/FeatureEngineeringAnalysis', () => () => <div>FeatureEngineeringAnalysis</div>);
 jest.mock('../components/analysis/TransientSignatureAnalysis', () => () => <div>TransientSignatureAnalysis</div>);
 jest.mock('../components/analysis/DiagnosticAnalysis', () => () => <div>DiagnosticAnalysis</div>);
-jest.mock('../components/analysis/SystemOfSystemsContext', () => () => <div>System-of-Systems (SoS) Context</div>);
+jest.mock('../components/analysis/SystemOfSystemsContext', () => () => <div data-testid="sos-context">System-of-Systems (SoS) Context</div>);
 jest.mock('../components/Icon', () => () => <svg />);
 
 describe('Analysis Component', () => {
@@ -21,7 +21,7 @@ describe('Analysis Component', () => {
                 <Analysis subPage="Time-Series Analysis" />
             </I18nProvider>
         );
-        expect(screen.getByText('Time-Series Analysis')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Time-Series Analysis/i })).toBeInTheDocument();
     });
 
     test('renders System-of-Systems Context Analysis sub-page', () => {
@@ -30,6 +30,6 @@ describe('Analysis Component', () => {
                 <Analysis subPage="System-of-Systems Context Analysis" />
             </I18nProvider>
         );
-        expect(screen.getByText('System-of-Systems (SoS) Context')).toBeInTheDocument();
+        expect(screen.getByTestId('sos-context')).toBeInTheDocument();
     });
 });
