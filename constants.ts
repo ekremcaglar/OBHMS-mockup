@@ -751,6 +751,67 @@ export const PILLARS_DATA = [
   }
 ];
 
+export const MOCK_CROSS_AIRCRAFT_ANOMALY_DATA = [
+    {
+      anomalyId: 'ANOM-001',
+      description: 'Intermittent Hydraulic Pressure Drops in Port-side Line',
+      suspectedSystem: 'Hydraulics',
+      potentialImpact: 'Reduced control surface effectiveness during high-G maneuvers.',
+      fleetPrevalence: 0.75,
+      affectedAircraft: [
+        {
+          tailNumber: 'KAAN-001',
+          firstOccurrence: '2023-10-20',
+          relatedFaults: ['H5501'],
+          sensorReadings: {
+            'Pressure Sensor HP-P-01A': 'Fluctuating between 2800-3000 PSI',
+          },
+        },
+        {
+          tailNumber: 'KAAN-003',
+          firstOccurrence: '2023-10-26',
+          relatedFaults: ['H5501', 'H5510'],
+           sensorReadings: {
+            'Pressure Sensor HP-P-01A': 'Average pressure 2850 PSI, below norm',
+          },
+        },
+         {
+          tailNumber: 'KAAN-004',
+          firstOccurrence: '2023-11-02',
+          relatedFaults: [],
+           sensorReadings: {
+            'Pressure Sensor HP-P-01A': 'Observed transient drops to 2700 PSI',
+          },
+        },
+      ],
+    },
+    {
+      anomalyId: 'ANOM-002',
+      description: 'EGT (Exhaust Gas Temperature) Spikes on Engine #2',
+      suspectedSystem: 'Propulsion',
+      potentialImpact: 'Indicates potential hot section degradation, could lead to premature engine failure.',
+      fleetPrevalence: 0.5,
+      affectedAircraft: [
+        {
+          tailNumber: 'KAAN-002',
+          firstOccurrence: '2023-10-18',
+          relatedFaults: ['P0420'],
+          sensorReadings: {
+            'EGT Sensor E2-T48': 'Spikes up to +15°C above baseline',
+          },
+        },
+        {
+          tailNumber: 'KAAN-003',
+          firstOccurrence: '2023-11-01',
+          relatedFaults: [],
+          sensorReadings: {
+            'EGT Sensor E2-T48': 'Spikes up to +10°C above baseline during climb',
+          },
+        },
+      ],
+    }
+];
+
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
 export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));

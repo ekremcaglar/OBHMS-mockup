@@ -6,11 +6,10 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
-import SystemOfSystemsContext from './analysis/SystemOfSystemsContext';
+import CrossAircraftAnomalyCorrelation from './analysis/CrossAircraftAnomalyCorrelation';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
-import EngineHealth from './health/EngineHealth';
 import PlaceholderAnalysisPage from './analysis/PlaceholderAnalysisPage';
 
 interface AnalysisProps {
@@ -105,10 +104,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
-            case 'System-of-Systems Context Analysis':
-                return <SystemOfSystemsContext />;
-            case 'Engine Health Management Analysis':
-                return <EngineHealth onAircraftSelect={() => {}} />;
+            case 'Cross-Aircraft Anomaly Correlation':
+                return <CrossAircraftAnomalyCorrelation />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
