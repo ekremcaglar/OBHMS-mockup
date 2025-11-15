@@ -8,4 +8,7 @@ module.exports = {
     "/node_modules/(?!marked|jsdom|whatwg-url|parse5)"
   ],
   setupFiles: ['./tests/setup.js'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
 };
