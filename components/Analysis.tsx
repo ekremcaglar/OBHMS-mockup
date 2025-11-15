@@ -15,6 +15,7 @@ import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
 import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
 import SystemOfSystemsContext from './analysis/SystemOfSystemsContext';
 import EngineHealth from './health/EngineHealth';
+import PilotHealthMonitoringAnalysis from './analysis/PilotHealthMonitoringAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -131,6 +132,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <SystemOfSystemsContext />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
+            case 'Pilot Health Monitoring Analysis':
+                return <PilotHealthMonitoringAnalysis />;
             case 'Structural Health Management Analysis':
                 return <StructuralHealthManagementAnalysis />;
             default:
