@@ -13,6 +13,7 @@ import TopologyBasedAnalysis from './analysis/TopologyBasedAnalysis';
 import PrognosticAnalysis from './analysis/PrognosticAnalysis';
 import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
 import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
+import StatisticalAnalysis from './analysis/StatisticalAnalysis';
 import EngineHealth from './health/EngineHealth';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
@@ -125,6 +126,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <AnomalyDetectionAnalysis title={getTitle()} />;
             case 'Reliability Analysis':
                 return <ReliabilityAnalysis />;
+            case 'Statistical Analysis':
+                return <StatisticalAnalysis />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
             default:
