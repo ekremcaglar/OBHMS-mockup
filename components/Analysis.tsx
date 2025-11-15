@@ -6,6 +6,7 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
+import SystemOfSystemsContext from './analysis/SystemOfSystemsContext';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -104,6 +105,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
+            case 'System-of-Systems Context Analysis':
+                return <SystemOfSystemsContext />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
             default:
