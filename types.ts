@@ -185,6 +185,11 @@ export interface NewsItem {
   source: string;
 }
 
+export interface Video {
+  src: string;
+  title: string;
+}
+
 export interface ReportTemplate {
   id: string;
   name: string;
