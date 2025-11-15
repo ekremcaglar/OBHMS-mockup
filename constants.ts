@@ -781,7 +781,7 @@ export const PILLARS_DATA = [
     sections: [
       { key: 'Analysis', titleKey: 'section_analysis_title', descriptionKey: 'section_analysis_desc' },
       { key: 'Health Monitoring', titleKey: 'section_health_monitoring_title', descriptionKey: 'section_health_monitoring_desc' },
-      { key: 'RCA Workbench', titleKey: 'section_rca_workbench_title', descriptionKey: 'section_rca_workbench_desc' },
+      { key: 'Root Cause Analysis', titleKey: 'root_cause_analysis', descriptionKey: 'root_cause_analysis_desc' },
       { key: 'Modeling & Algorithm Management', titleKey: 'section_modeling_management_title', descriptionKey: 'section_modeling_management_desc' },
       { key: 'Digital Twins & Simulation', titleKey: 'section_digital_twins_title', descriptionKey: 'section_digital_twins_desc' },
       { key: 'Custom Feature Builder', titleKey: 'section_feature_builder_title', descriptionKey: 'section_feature_builder_desc' },
@@ -853,6 +853,70 @@ export const PILLARS_DATA = [
     ]
   }
 ];
+
+export const MOCK_FAULT_TREE_DATA = {
+  name: 'Top Event: Engine Failure',
+  attributes: {
+    probability: '0.01%',
+  },
+  children: [
+    {
+      name: 'OR Gate',
+      children: [
+        {
+          name: 'Mechanical Failure',
+          attributes: {
+            probability: '0.05%',
+          },
+          children: [
+            {
+              name: 'AND Gate',
+              children: [
+                {
+                  name: 'Component A Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+                {
+                  name: 'Component B Failure',
+                  attributes: {
+                    probability: '0.5%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Electrical Failure',
+          attributes: {
+            probability: '0.02%',
+          },
+          children: [
+            {
+              name: 'OR Gate',
+              children: [
+                {
+                  name: 'Sensor Failure',
+                  attributes: {
+                    probability: '0.2%',
+                  },
+                },
+                {
+                  name: 'Power Supply Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
