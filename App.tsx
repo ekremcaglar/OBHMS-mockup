@@ -34,6 +34,8 @@ import { useI18n } from './context/I18nContext';
 import Login from './components/Login';
 import Feedback from './components/Feedback';
 import FeedbackDashboard from './components/FeedbackDashboard';
+import { NotificationProvider } from './context/NotificationContext';
+import Notification from './components/Notification';
 
 interface SearchState {
     query: string;
