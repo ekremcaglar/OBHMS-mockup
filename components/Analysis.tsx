@@ -6,7 +6,7 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
-import CrossAircraftAnomalyCorrelation from './analysis/CrossAircraftAnomalyCorrelation';
+import ImpactAnalysis from './analysis/ImpactAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -104,13 +104,17 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
-            case 'Cross-Aircraft Anomaly Correlation':
-                return <CrossAircraftAnomalyCorrelation />;
+            case 'Impact Analysis':
+                return <ImpactAnalysis title={getTitle()} />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
         }
     };
+
+    if (subPage === 'Impact Analysis') {
+        return renderSubPage();
+    }
     
 
     return (

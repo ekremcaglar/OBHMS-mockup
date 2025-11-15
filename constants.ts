@@ -706,13 +706,6 @@ export const PILLARS_DATA = [
       { key: 'Cybersecurity Threat Assessment', titleKey: 'section_cybersecurity_title', descriptionKey: 'section_cybersecurity_desc' },
       { key: 'Software Updates & Patch Management', titleKey: 'section_software_updates_title', descriptionKey: 'section_software_updates_desc' },
       { key: 'Data Governance Rules Engine', titleKey: 'section_data_governance_title', descriptionKey: 'section_data_governance_desc' },
-      { key: 'Alerts & Notifications Center', titleKey: 'section_alerts_notifications_title', descriptionKey: 'section_alerts_notifications_desc' },
-      { key: 'Offline Mode Management', titleKey: 'section_offline_mode_title', descriptionKey: 'section_offline_mode_desc' },
-      { key: 'Change Management & Versioning', titleKey: 'section_change_management_title', descriptionKey: 'section_change_management_desc' },
-      { key: 'Multi-Language Support & Localization', titleKey: 'section_multi_language_title', descriptionKey: 'section_multi_language_desc' },
-      { key: 'User Behavior Analytics', titleKey: 'section_user_behavior_analytics_title', descriptionKey: 'section_user_behavior_analytics_desc' },
-      { key: 'Data Export/Import Utility', titleKey: 'section_data_export_import_title', descriptionKey: 'section_data_export_import_desc' },
-      { key: 'User Personalization & Customization', titleKey: 'section_user_personalization_title', descriptionKey: 'section_user_personalization_desc' },
     ]
   },
   {
@@ -856,3 +849,45 @@ export const REQUIREMENTS_DATA = [
     ]
   }
 ];
+
+export const MOCK_IMPACT_ANALYSIS_DATA = {
+  missionCapability: {
+      data: [
+          { name: 'Sortie Rate', current: 85, projected: 70, fullMark: 100 },
+          { name: 'Weapon Release', current: 95, projected: 80, fullMark: 100 },
+          { name: 'Targeting Pod', current: 92, projected: 85, fullMark: 100 },
+          { name: 'EW Suite', current: 88, projected: 75, fullMark: 100 },
+          { name: 'Comms', current: 98, projected: 90, fullMark: 100 },
+      ],
+      metrics: [
+          { name: 'overall_mission_capability', value: 91.6, unit: '%' },
+          { name: 'projected_mission_capability', value: 80, unit: '%' },
+          { name: 'time_to_full_capability', value: 48, unit: ' hours' },
+      ],
+  },
+  costSchedule: {
+      data: [
+          { name: 'Parts', value: 15 },
+          { name: 'Labor', value: 25 },
+          { name: 'Logistics', value: 10 },
+          { name: 'Downtime', value: 30 },
+      ],
+      summary: [
+          { name: 'estimated_cost_increase', value: '$75,000' },
+          { name: 'projected_maintenance_hrs', value: '120' },
+          { name: 'schedule_delay', value: '3 days' },
+      ],
+  },
+  safetyRisk: {
+      data: [
+          { name: 'Low', value: 60, color: '#22c55e' },
+          { name: 'Medium', value: 30, color: '#f59e0b' },
+          { name: 'High', value: 10, color: '#ef4444' },
+      ],
+      factors: [
+          { name: 'in_flight_system_failure', status: 'critical' },
+          { name: 'ground_crew_safety', status: 'warning' },
+          { name: 'collateral_damage_risk', status: 'nominal' },
+      ],
+  },
+};
