@@ -781,7 +781,7 @@ export const PILLARS_DATA = [
     sections: [
       { key: 'Analysis', titleKey: 'section_analysis_title', descriptionKey: 'section_analysis_desc' },
       { key: 'Health Monitoring', titleKey: 'section_health_monitoring_title', descriptionKey: 'section_health_monitoring_desc' },
-      { key: 'RCA Workbench', titleKey: 'section_rca_workbench_title', descriptionKey: 'section_rca_workbench_desc' },
+      { key: 'Root Cause Analysis', titleKey: 'root_cause_analysis', descriptionKey: 'root_cause_analysis_desc' },
       { key: 'Modeling & Algorithm Management', titleKey: 'section_modeling_management_title', descriptionKey: 'section_modeling_management_desc' },
       { key: 'Digital Twins & Simulation', titleKey: 'section_digital_twins_title', descriptionKey: 'section_digital_twins_desc' },
       { key: 'Custom Feature Builder', titleKey: 'section_feature_builder_title', descriptionKey: 'section_feature_builder_desc' },
@@ -791,7 +791,6 @@ export const PILLARS_DATA = [
       { key: 'Mission Planning & Profiles', titleKey: 'section_mission_planning_title', descriptionKey: 'section_mission_planning_desc' },
       { key: 'Environmental & Operational Limits', titleKey: 'section_env_op_limits_title', descriptionKey: 'section_env_op_limits_desc' },
       { key: 'Statistical Process Control (SPC) Charts', titleKey: 'section_spc_charts_title', descriptionKey: 'section_spc_charts_desc' },
-      { key: 'Inter-Parameter Correlation', titleKey: 'section_inter_parameter_correlation_title', descriptionKey: 'section_inter_parameter_correlation_desc' },
       { key: 'Wear-out Rate Comparison', titleKey: 'section_wear_rate_comparison_title', descriptionKey: 'section_wear_rate_comparison_desc' },
       { key: 'Training Simulator Data Interface', titleKey: 'section_training_simulator_interface_title', descriptionKey: 'section_training_simulator_interface_desc' },
       { key: 'Cost-Benefit Analysis Report Generator', titleKey: 'section_cost_benefit_analysis_title', descriptionKey: 'section_cost_benefit_analysis_desc' },
@@ -855,12 +854,69 @@ export const PILLARS_DATA = [
   }
 ];
 
-export const MOCK_SYSTEM_DATA = [
-    { id: 'fcs', name: 'Flight Control System', x: 100, y: 100, connections: ['avionics', 'hydraulics'] },
-    { id: 'avionics', name: 'Avionics', x: 300, y: 100, connections: ['fcs', 'power'] },
-    { id: 'hydraulics', name: 'Hydraulics', x: 100, y: 300, connections: ['fcs', 'power'] },
-    { id: 'power', name: 'Power System', x: 300, y: 300, connections: ['avionics', 'hydraulics'] },
-];
+export const MOCK_FAULT_TREE_DATA = {
+  name: 'Top Event: Engine Failure',
+  attributes: {
+    probability: '0.01%',
+  },
+  children: [
+    {
+      name: 'OR Gate',
+      children: [
+        {
+          name: 'Mechanical Failure',
+          attributes: {
+            probability: '0.05%',
+          },
+          children: [
+            {
+              name: 'AND Gate',
+              children: [
+                {
+                  name: 'Component A Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+                {
+                  name: 'Component B Failure',
+                  attributes: {
+                    probability: '0.5%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Electrical Failure',
+          attributes: {
+            probability: '0.02%',
+          },
+          children: [
+            {
+              name: 'OR Gate',
+              children: [
+                {
+                  name: 'Sensor Failure',
+                  attributes: {
+                    probability: '0.2%',
+                  },
+                },
+                {
+                  name: 'Power Supply Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 

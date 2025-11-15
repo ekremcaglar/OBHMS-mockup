@@ -11,6 +11,7 @@ import SearchResult from './components/SearchResult';
 import TCPPage from './components/TCP';
 import Analysis from './components/Analysis';
 import All from './components/All';
+import RootCauseAnalysis from './components/analysis/RootCauseAnalysis';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
 import HelpPage from './components/HelpPage';
 import UserRolesPage from './components/UserRolesPage';
@@ -90,6 +91,9 @@ const App: React.FC = () => {
       const i18nKeys = SECTION_I18N_KEYS.get(currentPage);
       const isExistingPage = ['Analysis', 'Health Monitoring', 'Dashboards', 'Chart Builder', 'Reports', 'TCP'].includes(currentPage);
       if (i18nKeys && !isExistingPage) {
+        if (currentPage === 'Root Cause Analysis') {
+            return <RootCauseAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
+        }
         return <PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
       }
     }
