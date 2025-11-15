@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                                     </MegaMenuColumn>
                                     <MegaMenuColumn title={t('prognostics')}>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Prognostic Analysis')}>{t('prognostic_analysis')}</MegaMenuItem>
-                                        <MegaMenuItem onClick={() => handleNav('Predictive Analytics')}>{t('predictive_analytics')}</MegaMenuItem>
+                                        <MegaMenuItem onClick={() => handleAnalysisNav('Predictive Analytics')}>{t('predictive_analytics')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Survival Analysis')}>{t('survival_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Anomaly Detection Analysis')}>{t('anomaly_detection_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Failure Trend Analysis')}>{t('failure_trend_analysis')}</MegaMenuItem>
@@ -144,6 +144,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                             <NavItem label={t('reports')} page="Reports" currentPage={currentPage} onClick={() => handleNav('Reports')} />
                             <NavItem label="TCP" page="TCP" currentPage={currentPage} onClick={() => handleNav('TCP')} />
                             <NavItem label={t('all')} page="All" currentPage={currentPage} onClick={() => handleNav('All')} />
+                            <NavItem label="Feedback" page="FeedbackDashboard" currentPage={currentPage} onClick={() => handleNav('FeedbackDashboard')} />
                             {ADMIN_ROLES.includes(userRole) && <NavItem label={t('administration')} page="Administration" currentPage={currentPage} onClick={() => handleNav('Administration')} />}
                         </nav>
                     </div>

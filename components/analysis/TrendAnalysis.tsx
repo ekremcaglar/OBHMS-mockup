@@ -6,12 +6,12 @@ import { useI18n } from '../../context/I18nContext';
 
 const TrendAnalysis: React.FC = () => {
     const { t } = useI18n();
-    const [dataSourceId, setDataSourceId] = useState<string | null>('failure-trend-data');
-    const [xAxisField, setXAxisField] = useState<string | null>('month');
-    const [yAxisFields, setYAxisFields] = useState<string[]>(['failures']);
+    const [dataSourceId, setDataSourceId] = useState<string | null>('engine-vibration');
+    const [xAxisField, setXAxisField] = useState<string | null>('date');
+    const [yAxisFields, setYAxisFields] = useState<string[]>(['vibrationRms', 'egt']);
     
-    const trendDataSources = useMemo(() =>
-        CHART_DATA_SOURCES.filter(ds => ds.id.includes('trend'))
+    const timeSeriesDataSources = useMemo(() => 
+        CHART_DATA_SOURCES.filter(ds => ds.fields.some(f => f.type === 'category'))
     , []);
 
     const selectedDataSource = useMemo(() => 
@@ -24,6 +24,7 @@ const TrendAnalysis: React.FC = () => {
 
     const handleDataSourceChange = (id: string) => {
         setDataSourceId(id);
+        // Reset fields
         const newDataSource = CHART_DATA_SOURCES.find(ds => ds.id === id);
         const firstCatField = newDataSource?.fields.find(f => f.type === 'category');
         const firstValField = newDataSource?.fields.find(f => f.type === 'value');
@@ -60,7 +61,7 @@ const TrendAnalysis: React.FC = () => {
                 <div className="space-y-6">
                     <FormSelect label={t('data_source')} value={dataSourceId || ''} onChange={e => handleDataSourceChange(e.target.value)}>
                         <option value="" disabled>{t('select_source')}</option>
-                        {trendDataSources.map(ds => <option key={ds.id} value={ds.id}>{ds.name}</option>)}
+                        {timeSeriesDataSources.map(ds => <option key={ds.id} value={ds.id}>{ds.name}</option>)}
                     </FormSelect>
 
                     {selectedDataSource && (

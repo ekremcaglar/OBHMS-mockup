@@ -1,6 +1,5 @@
 import React from 'react';
-import { marked } from 'marked';
-import * as sanitizeHtml from 'sanitize-html';
+
 import { MOCK_FLEET_DATA } from '../constants';
 import StatusIndicator from './StatusIndicator';
 import Icon from './Icon';
@@ -22,9 +21,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ query, result, onAircraftSe
     
     const getHTML = () => {
         if (!result) return { __html: '' };
-        const rawHtml = marked.parse(result) as string;
-        const sanitizedHtml = sanitizeHtml(rawHtml);
-        return { __html: sanitizedHtml };
+        return { __html: result as string };
     }
 
     return (

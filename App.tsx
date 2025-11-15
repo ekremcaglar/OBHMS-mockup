@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Header from './components/Header';
 import Home from './components/Home';
-import Login from './components/Login';
 import AircraftDetailView from './components/AircraftDetailView';
 import ChartBuilder from './components/ChartBuilder';
 import Dashboards from './components/Dashboards';
@@ -12,9 +11,7 @@ import SearchResult from './components/SearchResult';
 import TCPPage from './components/TCP';
 import Analysis from './components/Analysis';
 import All from './components/All';
-import PredictiveAnalytics from './components/PredictiveAnalytics';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
-import CrossAircraftTrendComparison from './components/analysis/CrossAircraftTrendComparison';
 import HelpPage from './components/HelpPage';
 import UserRolesPage from './components/UserRolesPage';
 import SoftwareRequirementsPage from './components/SoftwareRequirementsPage';
@@ -31,6 +28,8 @@ import { MOCK_FLEET_DATA, INITIAL_DASHBOARDS, ADMIN_ROLES, ALL_SECTION_KEYS, SEC
 import { UserRole, Dashboard, HealthSubPage, AnalysisSubPage } from './types';
 import { generateSearchResponse } from './services/geminiService';
 import { useI18n } from './context/I18nContext';
+import Feedback from './components/Feedback';
+import FeedbackDashboard from './components/FeedbackDashboard';
 
 interface SearchState {
     query: string;
@@ -39,7 +38,6 @@ interface SearchState {
 }
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('Home');
   const [selectedAircraftId, setSelectedAircraftId] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('System Engineering Lead');
@@ -50,11 +48,6 @@ const App: React.FC = () => {
   const [healthSubPage, setHealthSubPage] = useState<HealthSubPage>('Structural');
   const [analysisSubPage, setAnalysisSubPage] = useState<AnalysisSubPage>('Time-Series Analysis');
   const { t } = useI18n();
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    setCurrentPage('Home');
-  };
 
   const handleAircraftSelect = useCallback((id: string) => {
     setSelectedAircraftId(id);
@@ -97,9 +90,6 @@ const App: React.FC = () => {
       const i18nKeys = SECTION_I18N_KEYS.get(currentPage);
       const isExistingPage = ['Analysis', 'Health Monitoring', 'Dashboards', 'Chart Builder', 'Reports', 'TCP'].includes(currentPage);
       if (i18nKeys && !isExistingPage) {
-        if (currentPage === 'Predictive Analytics') {
-          return <PredictiveAnalytics title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
-        }
         return <PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
       }
     }
@@ -174,16 +164,13 @@ const App: React.FC = () => {
                 );
             }
             return <Administration />;
-        case 'Cross-Aircraft Trend Comparison':
-            return <CrossAircraftTrendComparison />;
+        case 'FeedbackDashboard':
+            return <FeedbackDashboard />;
         default:
             return <Home setCurrentPage={setCurrentPage} onSearchSubmit={handleSearchSubmit} onAircraftSelect={handleAircraftSelect} />;
     }
   };
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   return (
     <div className="min-h-screen bg-[#101827] font-sans">
@@ -199,6 +186,7 @@ const App: React.FC = () => {
         <main className="container mx-auto p-4 sm:p-6 lg:p-8">
             {renderContent()}
         </main>
+        <Feedback />
     </div>
   );
 };

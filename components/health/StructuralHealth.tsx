@@ -5,9 +5,6 @@ import AirframeStressChart from './charts/AirframeStressChart';
 import Model3D from '../viewer/Model3D';
 import StructuralHeatmap from './charts/StructuralHeatmap';
 import { useI18n } from '../../context/I18nContext';
-import CrackPropagationChart from './charts/CrackPropagationChart';
-import FatigueAnalysisChart from './charts/FatigueAnalysisChart';
-import StressDistributionChart from './charts/StressDistributionChart';
 
 const StructuralHealth: React.FC = () => {
   const { t } = useI18n();
@@ -50,44 +47,6 @@ const StructuralHealth: React.FC = () => {
           }}
         >
           <StructuralHeatmap />
-        </MetricCard>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-96">
-        <MetricCard
-          metric={{
-            id: 'crack-propagation',
-            title: t('crack_propagation_analysis'),
-            value: '',
-            unit: '',
-            status: 'nominal',
-            description: t('crack_propagation_analysis_desc')
-          }}
-        >
-          <CrackPropagationChart />
-        </MetricCard>
-        <MetricCard
-          metric={{
-            id: 'fatigue-analysis',
-            title: t('fatigue_analysis'),
-            value: '',
-            unit: '',
-            status: 'warning',
-            description: t('fatigue_analysis_desc')
-          }}
-        >
-          <FatigueAnalysisChart />
-        </MetricCard>
-        <MetricCard
-          metric={{
-            id: 'stress-distribution',
-            title: t('stress_distribution'),
-            value: '',
-            unit: '',
-            status: 'nominal',
-            description: t('stress_distribution_desc')
-          }}
-        >
-          <StressDistributionChart />
         </MetricCard>
       </div>
     </div>
