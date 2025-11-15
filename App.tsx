@@ -33,6 +33,8 @@ import { useI18n } from './context/I18nContext';
 import Login from './components/Login';
 import Feedback from './components/Feedback';
 import FeedbackDashboard from './components/FeedbackDashboard';
+import { NotificationProvider } from './context/NotificationContext';
+import Notification from './components/Notification';
 
 interface SearchState {
     query: string;
@@ -191,21 +193,24 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#101827] font-sans">
-        <Header 
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setSelectedAircraftId={setSelectedAircraftId}
-            userRole={userRole}
-            setUserRole={setUserRole}
-            setHealthSubPage={setHealthSubPage}
-            setAnalysisSubPage={setAnalysisSubPage}
-        />
-        <main className="container mx-auto p-4 sm:p-6 lg:p-8">
-            {renderContent()}
-        </main>
-        <Feedback />
-    </div>
+    <NotificationProvider>
+      <div className="min-h-screen bg-[#101827] font-sans">
+          <Header
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              setSelectedAircraftId={setSelectedAircraftId}
+              userRole={userRole}
+              setUserRole={setUserRole}
+              setHealthSubPage={setHealthSubPage}
+              setAnalysisSubPage={setAnalysisSubPage}
+          />
+          <Notification />
+          <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+              {renderContent()}
+          </main>
+          <Feedback />
+      </div>
+    </NotificationProvider>
   );
 };
 
