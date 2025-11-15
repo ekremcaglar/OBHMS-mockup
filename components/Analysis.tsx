@@ -6,7 +6,14 @@ import DataProcessingAnalysis from './analysis/DataProcessingAnalysis';
 import FeatureEngineeringAnalysis from './analysis/FeatureEngineeringAnalysis';
 import TransientSignatureAnalysis from './analysis/TransientSignatureAnalysis';
 import DiagnosticAnalysis from './analysis/DiagnosticAnalysis';
+import FaultIsolationAnalysis from './analysis/FaultIsolationAnalysis';
+import TestabilityAnalysis from './analysis/TestabilityAnalysis';
 import InterParameterCorrelationAnalysis from './analysis/InterParameterCorrelationAnalysis';
+import TopologyBasedAnalysis from './analysis/TopologyBasedAnalysis';
+import PrognosticAnalysis from './analysis/PrognosticAnalysis';
+import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
+import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
+import EngineHealth from './health/EngineHealth';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -104,8 +111,22 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <TransientSignatureAnalysis />;
             case 'Diagnostic Analysis':
                 return <DiagnosticAnalysis />;
+            case 'Fault Isolation Analysis':
+                return <FaultIsolationAnalysis />;
+            case 'Testability Analysis':
+                return <TestabilityAnalysis />;
             case 'Inter-Parameter Correlation Analysis':
                 return <InterParameterCorrelationAnalysis />;
+            case 'Topology-Based Analysis':
+                return <TopologyBasedAnalysis />;
+            case 'Prognostic Analysis':
+                return <PrognosticAnalysis />;
+            case 'Anomaly Detection Analysis':
+                return <AnomalyDetectionAnalysis title={getTitle()} />;
+            case 'Reliability Analysis':
+                return <ReliabilityAnalysis />;
+            case 'Engine Health Management Analysis':
+                return <EngineHealth onAircraftSelect={() => {}} />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;

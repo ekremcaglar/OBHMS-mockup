@@ -29,6 +29,7 @@ import { MOCK_FLEET_DATA, INITIAL_DASHBOARDS, ADMIN_ROLES, ALL_SECTION_KEYS, SEC
 import { UserRole, Dashboard, HealthSubPage, AnalysisSubPage } from './types';
 import { generateSearchResponse } from './services/geminiService';
 import { useI18n } from './context/I18nContext';
+import Login from './components/Login';
 import Feedback from './components/Feedback';
 import FeedbackDashboard from './components/FeedbackDashboard';
 
@@ -39,6 +40,7 @@ interface SearchState {
 }
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPage, setCurrentPage] = useState('Home');
   const [selectedAircraftId, setSelectedAircraftId] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('System Engineering Lead');
@@ -49,6 +51,10 @@ const App: React.FC = () => {
   const [healthSubPage, setHealthSubPage] = useState<HealthSubPage>('Structural');
   const [analysisSubPage, setAnalysisSubPage] = useState<AnalysisSubPage>('Time-Series Analysis');
   const { t } = useI18n();
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
 
   const handleAircraftSelect = useCallback((id: string) => {
     setSelectedAircraftId(id);
@@ -175,6 +181,10 @@ const App: React.FC = () => {
     }
   };
 
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#101827] font-sans">
