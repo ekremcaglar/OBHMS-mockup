@@ -12,15 +12,15 @@ const FrequencyAnalysis: React.FC = () => {
     const { t } = useI18n();
     return (
         <div className="space-y-6">
-            <PlaceholderCard 
+            <PlaceholderCard
                 title="Fast Fourier Transform (FFT)"
                 description="This page would display FFT plots of vibration and acoustic data, allowing analysts to identify specific fault frequencies related to bearings, gears, and blades."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Harmonic and Sideband Analysis"
                 description="Interactive tools to analyze harmonic series and sidebands around fundamental frequencies, which are key indicators of misalignment, looseness, or gear mesh problems."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Envelope Analysis"
                 description="Advanced signal processing technique used to demodulate high-frequency signals, revealing low-frequency repetitive impacts characteristic of early-stage bearing faults."
             />

@@ -7,8 +7,7 @@ import ShortcutCard from './home/ShortcutCard';
 import MetricCard from './MetricCard';
 import WatchlistAircraft from './home/WatchlistAircraft';
 import { useI18n } from '../context/I18nContext';
-import { Shortcut, Video } from '../types';
-import VideoPlayer from './VideoPlayer';
+import { Shortcut } from '../types';
 import video1 from '../videos/Aircraft_Predicts_Its_Future.mp4';
 import video2 from '../videos/Dijital_Doktor__Arıza_Tahmini.mp4';
 import video3 from '../videos/KAAN__The_Jet_That_Predicts.mp4';
@@ -25,10 +24,9 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ setCurrentPage, onSearchSubmit, onAircraftSelect }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
     const { t } = useI18n();
 
-    const videos: Video[] = [
+    const videos = [
         { src: video1, title: 'Aircraft Predicts Its Future' },
         { src: video2, title: 'Dijital Doktor: Arıza Tahmini' },
         { src: video3, title: 'KAAN: The Jet That Predicts' },
@@ -120,8 +118,8 @@ const Home: React.FC<HomeProps> = ({ setCurrentPage, onSearchSubmit, onAircraftS
                 <h2 className="text-2xl font-bold text-white mb-4">Videos</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {videos.map((video, index) => (
-                        <div key={index} className="rounded-lg overflow-hidden shadow-lg cursor-pointer" onClick={() => setSelectedVideo(video)}>
-                            <video className="w-full pointer-events-none">
+                        <div key={index} className="rounded-lg overflow-hidden shadow-lg">
+                            <video controls className="w-full">
                                 <source src={video.src} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
@@ -132,14 +130,6 @@ const Home: React.FC<HomeProps> = ({ setCurrentPage, onSearchSubmit, onAircraftS
                     ))}
                 </div>
             </div>
-
-            {selectedVideo && (
-                <VideoPlayer
-                    src={selectedVideo.src}
-                    title={selectedVideo.title}
-                    onClose={() => setSelectedVideo(null)}
-                />
-            )}
 
             {/* Quick Access */}
             <div>

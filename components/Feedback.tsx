@@ -160,7 +160,7 @@ const Feedback = () => {
       </button>
       {state.captureMode && (
         <>
-          <div 
+          <div
             className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 cursor-crosshair"
             onMouseDown={startDrawing}
             onMouseMove={draw}
@@ -182,20 +182,20 @@ const Feedback = () => {
             )}
           </div>
           {selection && !state.isDrawing && (
-            <div 
+            <div
               className="absolute flex gap-2 z-50"
               style={{
                 left: Math.min(selection.x, selection.x + selection.w) + Math.abs(selection.w),
                 top: Math.min(selection.y, selection.y + selection.h) + Math.abs(selection.h),
               }}
             >
-              <button 
+              <button
                 className="bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 transition-colors"
                 onClick={handleAcceptCapture}
               >
                 Accept
               </button>
-              <button 
+              <button
                 className="bg-gray-700 text-white py-2 px-4 rounded-md hover:bg-gray-600 transition-colors"
                 onClick={handleCancelCapture}
               >
@@ -211,7 +211,7 @@ const Feedback = () => {
             <h2 className="text-2xl font-bold text-white mb-4">{t('submit_feedback')}</h2>
             <p className="text-gray-400 mb-6">{t('tell_us_what_you_think')}</p>
             <form onSubmit={handleSubmit}>
-              {screenshot && <img src={screenshot} alt="Screenshot" className="mb-4 rounded-md" />} 
+              {screenshot && <img src={screenshot} alt="Screenshot" className="mb-4 rounded-md" />}
               <textarea
                 className="w-full p-3 bg-gray-900 text-white border border-gray-700 rounded-md focus:ring-2 focus:ring-sky-500 focus:outline-none transition"
                 rows={6}

@@ -13,15 +13,15 @@ const FeatureEngineeringAnalysis: React.FC = () => {
     const { t } = useI18n();
     return (
         <div className="space-y-6">
-            <PlaceholderCard 
+            <PlaceholderCard
                 title="Statistical Feature Extraction"
                 description="Calculation of statistical measures like Root Mean Square (RMS), Kurtosis, and Crest Factor from vibration signals to quantify machinery health."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Duty Cycle Parameterization"
                 description="Extraction of key operational parameters, such as engine on/off cycles, time-at-temperature, and load profiles, which are critical for Remaining Useful Life (RUL) prediction."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Lag/Lead Feature Creation"
                 description="Generating time-lagged features to help models understand the temporal relationships and delays between different sensor readings (e.g., temperature rise following a pressure drop)."
             />

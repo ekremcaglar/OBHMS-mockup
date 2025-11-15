@@ -10,7 +10,7 @@ const TrendAnalysis: React.FC = () => {
     const [xAxisField, setXAxisField] = useState<string | null>('date');
     const [yAxisFields, setYAxisFields] = useState<string[]>(['vibrationRms', 'egt']);
     
-    const timeSeriesDataSources = useMemo(() => 
+    const timeSeriesDataSources = useMemo(() =>
         CHART_DATA_SOURCES.filter(ds => ds.fields.some(f => f.type === 'category'))
     , []);
 

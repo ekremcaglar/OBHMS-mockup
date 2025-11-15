@@ -52,6 +52,7 @@ const en = {
         "operational_analysis": "Operational Analysis",
         "system_of_systems_context_analysis": "System-of-Systems (SoS) Context",
         "impact_analysis": "Impact Analysis",
+        "impact_analysis_desc": "Assess the potential effects of a component failure or maintenance action on the fleet's operational readiness, cost, and safety.",
         "natural_language_search_analysis": "Natural Language Search",
         "life_and_usage_management_analysis": "Life and Usage Management",
         "structural_health_management_analysis": "Structural Health Management",
@@ -751,6 +752,7 @@ const tr = {
         "operational_analysis": "Operasyonel Analiz",
         "system_of_systems_context_analysis": "Sistemler Sistemi (SoS) Bağlamı",
         "impact_analysis": "Etki Analizi",
+        "impact_analysis_desc": "Bir bileşen arızasının veya bakım eyleminin filonun operasyonel hazırlığı, maliyeti ve güvenliği üzerindeki potansiyel etkilerini değerlendirin.",
         "natural_language_search_analysis": "Doğal Dil Arama",
         "life_and_usage_management_analysis": "Yaşam ve Kullanım Yönetimi",
         "structural_health_management_analysis": "Yapısal Sağlık Yönetimi",
@@ -963,7 +965,7 @@ const tr = {
     "section_cost_benefit_analysis_desc": "OBHMS kaynaklı optimasyondan elde edilen maliyet tasarruflarını ölçme.",
     "section_predictive_analytics_title": "Tahminsel Analitik",
     "section_predictive_analytics_desc": "RUL'u kapsayan, aynı zamanda gelecekteki operasyonel parametreleri ve görev başarısı olasılığını tahmin eden geniş bir terim.",
-  
+
      "pillar_data_management": "Veri, Sistem ve Güvenlik Yönetimi",
      "section_user_admin_title": "Kullanıcı ve Rol Yönetimi",
      "section_user_admin_desc": "Kullanıcı hesaplarını, rollerini ve erişim izinlerini (RBAC) yönetme.",  "section_system_config_title": "Sistem Yapılandırması ve Ayarları",

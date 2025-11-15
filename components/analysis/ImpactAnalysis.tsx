@@ -1,143 +1,153 @@
 import React from 'react';
-import { useI18n } from '../../context/I18nContext';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, PieChart, Pie, Cell } from 'recharts';
-import Icon from '../Icon';
+import { Card, CardHeader, CardTitle, CardContent } from '../Card';
 import { MOCK_IMPACT_ANALYSIS_DATA } from '../../constants';
+import { useI18n } from '../../context/I18nContext';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import Icon from '../Icon';
 
-interface ImpactAnalysisProps {
-    title: string;
-}
+const ProgressBar: React.FC<{ current: number; projected: number; fullMark: number; label: string }> = ({ current, projected, fullMark, label }) => {
+    const currentValue = Number(current);
+    const projectedValue = Number(projected);
 
-const ImpactAnalysis: React.FC<ImpactAnalysisProps> = ({ title }) => {
-    const { t } = useI18n();
-    const data = MOCK_IMPACT_ANALYSIS_DATA;
-    const tickColor = document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280';
-    const gridColor = document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb';
-    const tooltipStyle = {
-        background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
-        borderColor: document.documentElement.classList.contains('dark') ? '#374151' : '#e5e7eb',
-        borderRadius: '0.5rem',
-    };
-
-    const StatusIndicator: React.FC<{ status: 'nominal' | 'warning' | 'critical' }> = ({ status }) => {
-        const color = {
-            nominal: 'bg-green-500',
-            warning: 'bg-yellow-500',
-            critical: 'bg-red-500',
-        }[status];
-        return <span className={`w-3 h-3 rounded-full ${color} inline-block mr-2`}></span>;
-    };
+    const currentPercentage = (currentValue / fullMark) * 100;
+    const projectedPercentage = (projectedValue / fullMark) * 100;
 
     return (
-        <div>
-             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                <Icon name="TrendingUp" className="w-8 h-8" />
-                {title}
-            </h1>
+        <div className="mb-4">
+            <div className="flex justify-between items-center mb-1 text-sm text-gray-300">
+                <span>{label}</span>
+                <span>{`${projectedValue.toFixed(0)} / ${fullMark}`}</span>
+            </div>
+            <div className="w-full bg-gray-700 rounded-full h-4 relative overflow-hidden">
+                <div
+                    className="bg-sky-500 h-4 rounded-full"
+                    style={{ width: `${projectedPercentage}%` }}
+                />
+                <div
+                    className="absolute top-0 left-0 bg-sky-700 h-4 rounded-full"
+                    style={{ width: `${currentPercentage}%`, zIndex: 1 }}
+                />
+            </div>
+        </div>
+    );
+};
+
+const SummaryMetric: React.FC<{ label: string; value: string; }> = ({ label, value }) => (
+    <div className="text-center">
+        <p className="text-gray-400 text-sm">{label}</p>
+        <p className="text-2xl font-bold text-white">{value}</p>
+    </div>
+);
+
+const SafetyRiskFactor: React.FC<{ factor: { name: string; status: 'critical' | 'warning' | 'nominal' } }> = ({ factor }) => {
+    const statusConfig = {
+        critical: { icon: 'ShieldX', color: 'text-red-400', label: 'critical' },
+        warning: { icon: 'ShieldAlert', color: 'text-yellow-400', label: 'warning' },
+        nominal: { icon: 'ShieldCheck', color: 'text-green-400', label: 'nominal' },
+    };
+    const { icon, color, label } = statusConfig[factor.status];
+    const { t } = useI18n();
+
+    return (
+        <div className="flex items-center space-x-3">
+            <Icon name={icon as any} className={`w-6 h-6 ${color}`} />
+            <div>
+                <p className="text-white font-medium">{t(factor.name as any)}</p>
+                <p className={`text-sm ${color}`}>{t(label)}</p>
+            </div>
+        </div>
+    );
+};
+
+
+const ImpactAnalysis: React.FC = () => {
+    const { t } = useI18n();
+    const { missionCapability, costSchedule, safetyRisk } = MOCK_IMPACT_ANALYSIS_DATA;
+
+    return (
+        <div className="space-y-6">
+            <header>
+                <h1 className="text-3xl font-bold text-white">{t('impact_analysis')}</h1>
+                <p className="text-gray-400 mt-1">{t('impact_analysis_desc')}</p>
+            </header>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Column 1: Mission Capability */}
-                <div className="bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 space-y-6">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-3">
-                        <Icon name="Target" className="w-6 h-6" />
-                        {t('mission_capability')}
-                    </h2>
-                    <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data.missionCapability.data}>
-                                <PolarGrid stroke={gridColor}/>
-                                <PolarAngleAxis dataKey="name" stroke={tickColor}/>
-                                <PolarRadiusAxis angle={30} domain={[0, 100]} stroke={tickColor} />
-                                <Radar name="Current" dataKey="current" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-                                <Radar name="Projected" dataKey="projected" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6} />
-                                <Tooltip contentStyle={tooltipStyle} />
-                                <Legend />
-                            </RadarChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('key_metrics')}</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            {data.missionCapability.metrics.map(metric => (
-                                 <li key={metric.name} className="flex justify-between items-center p-2 rounded-md bg-gray-50 dark:bg-slate-700/50">
-                                    <span>{t(metric.name as any)}</span>
-                                    <span className="font-bold text-gray-800 dark:text-white">{metric.value}{metric.unit}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('mission_capability')}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                       {missionCapability.data.map(item => (
+                            <ProgressBar
+                                key={item.name}
+                                label={t(item.name as any)}
+                                current={item.current}
+                                projected={item.projected}
+                                fullMark={item.fullMark}
+                            />
+                        ))}
+                    </CardContent>
+                </Card>
 
-                {/* Column 2: Cost / Schedule */}
-                <div className="bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 space-y-6">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-3">
-                        <Icon name="DollarSign" className="w-6 h-6" />
-                        {t('cost_schedule_impact')}
-                    </h2>
-                    <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data.costSchedule.data} layout="vertical" margin={{ top: 5, right: 20, left: 40, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke={gridColor}/>
-                                <XAxis type="number" stroke={tickColor} />
-                                <YAxis type="category" dataKey="name" stroke={tickColor} width={80} />
-                                <Tooltip contentStyle={tooltipStyle} />
-                                <Legend />
-                                <Bar dataKey="value" fill="#82ca9d" name={t('cost_increase_percent')} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                     <div>
-                        <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('impact_summary')}</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                           {data.costSchedule.summary.map(item => (
-                                 <li key={item.name} className="flex justify-between items-center p-2 rounded-md bg-gray-50 dark:bg-slate-700/50">
-                                    <span>{t(item.name as any)}</span>
-                                    <span className="font-bold text-gray-800 dark:text-white">{item.value}</span>
-                                </li>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('cost_schedule')}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex justify-around items-center h-full">
+                           {costSchedule.summary.map(item => (
+                                <SummaryMetric
+                                    key={item.name}
+                                    label={t(item.name as any)}
+                                    value={item.value}
+                                />
                             ))}
-                        </ul>
-                    </div>
-                </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                {/* Column 3: Safety / Risk */}
-                <div className="bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6 space-y-6">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-3">
-                        <Icon name="Shield" className="w-6 h-6" />
-                        {t('safety_risk_assessment')}
-                    </h2>
-                    <div className="h-64">
-                       <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={data.safetyRisk.data}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    outerRadius={80}
-                                    fill="#8884d8"
-                                    dataKey="value"
-                                    label={({ name, percent }) => `${t(name as any)} ${(percent * 100).toFixed(0)}%`}
-                                >
-                                    {data.safetyRisk.data.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip contentStyle={tooltipStyle} />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('risk_factors')}</h3>
-                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                            {data.safetyRisk.factors.map(factor => (
-                                 <li key={factor.name} className="flex items-center p-2 rounded-md bg-gray-50 dark:bg-slate-700/50">
-                                    <StatusIndicator status={factor.status as any} />
-                                    <span>{t(factor.name as any)}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('safety_risk')}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="h-48">
+                                <ResponsiveContainer>
+                                    <PieChart>
+                                        <Pie
+                                            data={safetyRisk.data}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={70}
+                                            innerRadius={40}
+                                        >
+                                            {safetyRisk.data.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                                        </Pie>
+                                        <Tooltip
+                                            formatter={(value, name) => [`${value}%`, t(name.toLowerCase() as any)]}
+                                            contentStyle={{
+                                                backgroundColor: '#1f2937',
+                                                borderColor: '#374151',
+                                                color: '#d1d5db'
+                                            }}
+                                        />
+                                        <Legend
+                                            formatter={(value) => <span className="text-gray-300">{t(value.toLowerCase() as any)}</span>}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            <div className="space-y-4">
+                                {safetyRisk.factors.map(factor => (
+                                    <SafetyRiskFactor key={factor.name} factor={factor} />
+                                ))}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

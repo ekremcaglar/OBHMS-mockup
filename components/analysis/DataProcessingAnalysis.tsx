@@ -12,15 +12,15 @@ const DataProcessingAnalysis: React.FC = () => {
     const { t } = useI18n();
     return (
         <div className="space-y-6">
-            <PlaceholderCard 
+            <PlaceholderCard
                 title="Data Cleaning & Validation"
                 description="Raw sensor data is automatically cleaned to remove noise, handle missing values, and validate against expected ranges. This ensures the integrity and reliability of all subsequent analyses."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Time Synchronization"
                 description="Data from multiple sensors and systems are time-aligned to a master clock, enabling accurate correlation of events across the entire aircraft platform."
             />
-             <PlaceholderCard 
+             <PlaceholderCard
                 title="Format Standardization"
                 description="All incoming data is converted into a standardized format (e.g., Parquet, Arrow) for efficient storage, retrieval, and processing by analytical models."
             />
