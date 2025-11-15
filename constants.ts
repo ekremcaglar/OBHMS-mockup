@@ -327,59 +327,6 @@ export const INITIAL_DASHBOARDS: Dashboard[] = [
             { id: 't-46', type: 'ai_summary', gridSpan: 12 },
             { id: 't-47', type: 'area_chart', title: 'Custom Area Chart', gridSpan: 12 },
         ]
-    },
-    {
-        id: 'engine-vibration-fft',
-        name: 'Engine Vibration FFT',
-        description: 'Frequency domain analysis of engine vibration data.',
-        icon: 'WaveSquare',
-        fields: [
-            { id: 'frequency', name: 'Frequency (Hz)', type: 'category' },
-            { id: 'amplitude', name: 'Amplitude', type: 'value' },
-        ]
-    },
-    {
-        id: 'failure-trend-data',
-        name: 'Failure Trend Over Time',
-        description: 'Monthly failure counts for a specific component.',
-        icon: 'TrendingUp',
-        fields: [
-            { id: 'month', name: 'Month', type: 'category' },
-            { id: 'failures', name: 'Failures', type: 'value' },
-        ]
-    },
-    {
-        id: 'data-processing-pipeline',
-        name: 'Data Processing Pipeline',
-        description: 'Volume of data at each stage of the processing pipeline.',
-        icon: 'Database',
-        fields: [
-            { id: 'stage', name: 'Stage', type: 'category' },
-            { id: 'dataVolume', name: 'Data Volume (GB)', type: 'value' },
-        ]
-    },
-    {
-        id: 'feature-engineering-data',
-        name: 'Engine Feature Correlation',
-        description: 'Correlation between different engineered features from engine data.',
-        icon: 'Cpu',
-        fields: [
-            { id: 'vibrationRms', name: 'Vibration (RMS)', type: 'value' },
-            { id: 'peakToPeak', name: 'Peak-to-Peak', type: 'value' },
-            { id: 'kurtosis', name: 'Kurtosis', type: 'value' },
-            { id: 'crestFactor', name: 'Crest Factor', type: 'value' },
-        ]
-    },
-    {
-        id: 'transient-event-data',
-        name: 'Landing Gear Transient Event',
-        description: 'High-frequency data captured during a landing gear deployment event.',
-        icon: 'Zap',
-        fields: [
-            { id: 'time', name: 'Time (ms)', type: 'value' },
-            { id: 'amplitude', name: 'Amplitude', type: 'value' },
-            { id: 'baseline', name: 'Baseline', type: 'value' },
-        ]
     }
 ];
 
@@ -486,73 +433,7 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
       { subject: 'Propulsion', 'KAAN-001': 97, 'KAAN-002': 45, 'KAAN-003': 94, 'KAAN-004': 98 },
       { subject: 'Hydraulics', 'KAAN-001': 85, 'KAAN-002': 92, 'KAAN-003': 78, 'KAAN-004': 99 },
       { subject: 'Airframe', 'KAAN-001': 99, 'KAAN-002': 98, 'KAAN-003': 88, 'KAAN-004': 100 },
-    ],
-    'engine-vibration-fft': Array.from({ length: 50 }, (_, i) => ({
-        frequency: i * 10,
-        amplitude: Math.random() * (i === 20 ? 5 : 1),
-    })),
-    'failure-trend-data': [
-        { month: 'Jan', failures: 2 },
-        { month: 'Feb', failures: 3 },
-        { month: 'Mar', failures: 2 },
-        { month: 'Apr', failures: 4 },
-        { month: 'May', failures: 5 },
-        { month: 'Jun', failures: 4 },
-        { month: 'Jul', failures: 6 },
-        { month: 'Aug', failures: 5 },
-    ],
-    'data-processing-pipeline': [
-        { stage: 'Ingest', dataVolume: 500 },
-        { stage: 'Clean', dataVolume: 450 },
-        { stage: 'Validate', dataVolume: 440 },
-        { stage: 'Align', dataVolume: 420 },
-        { stage: 'Standardize', dataVolume: 410 },
-        { stage: 'Store', dataVolume: 400 },
-    ],
-    'feature-engineering-data': Array.from({ length: 50 }, () => ({
-        vibrationRms: Math.random() * 2,
-        peakToPeak: Math.random() * 5,
-        kurtosis: 3 + Math.random() * 2,
-        crestFactor: 1.5 + Math.random(),
-    })),
-    'transient-event-data': Array.from({ length: 100 }, (_, i) => {
-        const baseline = 1 + Math.sin(i / 10) * 0.2;
-        let amplitude = baseline + (Math.random() - 0.5) * 0.1;
-        if (i > 40 && i < 50) {
-            amplitude += Math.sin((i - 40) * Math.PI / 10) * 3;
-        }
-        return { time: i * 2, amplitude, baseline };
-    }),
-};
-
-export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
-    'fl-2': {
-        symptoms: [
-            "Hydraulic Pressure Warning Light On",
-            "Slow landing gear deployment reported by pilot",
-            "Telemetry shows pressure drop in port-side hydraulic line during high-G maneuvers"
-        ],
-        probableCauses: [
-            {
-                component: "Hydraulic Line P-78B",
-                reasoning: "Stress analysis indicates this line is prone to fatigue cracks. Recent flight profiles involved high stress.",
-                probability: 0.75,
-                source: "Physics-Based Model"
-            },
-            {
-                component: "Reservoir Pressure Sensor",
-                reasoning: "Sensor has a history of intermittent failures across the fleet. Could be a false positive.",
-                probability: 0.20,
-                source: "Historical Data"
-            },
-            {
-                component: "Hydraulic Pump Assembly",
-                reasoning: "Pump is nearing its scheduled maintenance interval, but shows no other signs of degradation.",
-                probability: 0.05,
-                source: "Maintenance Records"
-            }
-        ]
-    }
+    ]
 };
 
 // Home Page Data
@@ -728,6 +609,7 @@ export const MOCK_FAULT_LOGS = [
   { id: 'fl-5', timestamp: '2023-10-24 16:45', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0301', description: 'Cylinder 1 Misfire Detected', severity: 'High' },
   { id: 'fl-6', timestamp: '2023-10-23 09:05', aircraft: 'KAAN-004', system: 'ECS', code: 'E1005', description: 'Cabin Pressure Sensor Drift', severity: 'Low' },
 ];
+
 export const ADMIN_ROLES: UserRole[] = [
   'OBHMS Administrator / System Owner',
   'Security Officer',
@@ -853,12 +735,6 @@ export const PILLARS_DATA = [
     ]
   }
 ];
-
-export const CROSS_AIRCRAFT_TREND_DATA = {
-  comparisonData: [
-    ...RADAR_CHART_DATA,
-  ],
-};
 
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
