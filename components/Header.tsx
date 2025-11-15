@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Cross-Aircraft Anomaly Correlation')}>{t('cross_aircraft_anomaly_correlation')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Reliability Analysis')}>{t('reliability_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Operational Analysis')}>{t('operational_analysis')}</MegaMenuItem>
-                                        <MegaMenuItem onClick={() => handleAnalysisNav('System-of-Systems Context Analysis')}>{t('system_of_systems_context_analysis')}</MegaMenuItem>
+                                        <MegaMenuItem onClick={() => setCurrentPage('System-of-Systems Context Analysis')}>{t('system_of_systems_context_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => setCurrentPage('Impact Analysis')}>{t('impact_analysis')}</MegaMenuItem>
                                     </MegaMenuColumn>
                                     <MegaMenuColumn title={t('core_methods')}>

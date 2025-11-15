@@ -13,6 +13,7 @@ import Analysis from './components/Analysis';
 import All from './components/All';
 import RootCauseAnalysis from './components/analysis/RootCauseAnalysis';
 import ImpactAnalysis from './components/analysis/ImpactAnalysis';
+import SystemOfSystemsContextAnalysisPage from './components/analysis/SystemOfSystemsContextAnalysisPage';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
 import HelpPage from './components/HelpPage';
 import UserRolesPage from './components/UserRolesPage';
@@ -103,6 +104,9 @@ const App: React.FC = () => {
         }
         if (currentPage === 'Impact Analysis') {
             return <ImpactAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
+        }
+        if (currentPage === 'System-of-Systems Context Analysis') {
+            return <SystemOfSystemsContextAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
         }
         return <PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
       }

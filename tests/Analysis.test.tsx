@@ -12,6 +12,7 @@ jest.mock('../components/analysis/FeatureEngineeringAnalysis', () => () => <div>
 jest.mock('../components/analysis/TransientSignatureAnalysis', () => () => <div>Mocked Transient Signature Analysis</div>);
 jest.mock('../components/analysis/DiagnosticAnalysis', () => () => <div>Mocked Diagnostic Analysis</div>);
 jest.mock('../components/analysis/PlaceholderAnalysisPage', () => ({ title }: { title: string }) => <div data-testid="placeholder-page">{title}</div>);
+jest.mock('../components/analysis/SystemOfSystemsContext', () => () => <div data-testid="system-of-systems-context">Mocked System-of-Systems Context</div>);
 jest.mock('../components/analysis/RootCauseAnalysis', () => () => <div>Mocked Root Cause Analysis</div>);
 jest.mock('../components/Icon', () => () => <svg />);
 
@@ -31,6 +32,6 @@ describe('Analysis Component', () => {
                 <Analysis subPage="System-of-Systems Context Analysis" />
             </I18nProvider>
         );
-        expect(screen.getByTestId('placeholder-page')).toHaveTextContent('System-of-Systems (SoS) Context');
+        expect(screen.getByTestId('system-of-systems-context')).toHaveTextContent('Mocked System-of-Systems Context');
     });
 });
