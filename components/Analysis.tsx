@@ -14,6 +14,7 @@ import PrognosticAnalysis from './analysis/PrognosticAnalysis';
 import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
 import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
 import EngineHealth from './health/EngineHealth';
+import ImpactAnalysis from './analysis/ImpactAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
@@ -127,6 +128,8 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <ReliabilityAnalysis />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
+            case 'Impact Analysis':
+                return <ImpactAnalysis />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;
