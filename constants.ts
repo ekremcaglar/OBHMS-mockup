@@ -854,6 +854,13 @@ export const PILLARS_DATA = [
   }
 ];
 
+export const MOCK_SYSTEM_DATA = [
+    { id: 'fcs', name: 'Flight Control System', x: 100, y: 100, connections: ['avionics', 'hydraulics'] },
+    { id: 'avionics', name: 'Avionics', x: 300, y: 100, connections: ['fcs', 'power'] },
+    { id: 'hydraulics', name: 'Hydraulics', x: 100, y: 300, connections: ['fcs', 'power'] },
+    { id: 'power', name: 'Power System', x: 300, y: 300, connections: ['avionics', 'hydraulics'] },
+];
+
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
 export const SECTION_I18N_KEYS = new Map(PILLARS_DATA.flatMap(p => p.sections.map(s => [s.key, { titleKey: s.titleKey, descriptionKey: s.descriptionKey }])));
