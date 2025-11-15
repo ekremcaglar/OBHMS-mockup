@@ -14,6 +14,7 @@ import Analysis from './components/Analysis';
 import All from './components/All';
 import RootCauseAnalysis from './components/analysis/RootCauseAnalysis';
 import ImpactAnalysis from './components/analysis/ImpactAnalysis';
+import SystemOfSystemsContextAnalysisPage from './components/analysis/SystemOfSystemsContextAnalysisPage';
 import PlaceholderAnalysisPage from './components/analysis/PlaceholderAnalysisPage';
 import HelpPage from './components/HelpPage';
 import UserRolesPage from './components/UserRolesPage';
