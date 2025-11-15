@@ -60,15 +60,20 @@ const SafetyRiskFactor: React.FC<{ factor: { name: string; status: 'critical' | 
 };
 
 
-const ImpactAnalysis: React.FC = () => {
+interface ImpactAnalysisProps {
+    title: string;
+    description: string;
+}
+
+const ImpactAnalysis: React.FC<ImpactAnalysisProps> = ({ title, description }) => {
     const { t } = useI18n();
     const { missionCapability, costSchedule, safetyRisk } = MOCK_IMPACT_ANALYSIS_DATA;
 
     return (
         <div className="space-y-6">
             <header>
-                <h1 className="text-3xl font-bold text-white">{t('impact_analysis')}</h1>
-                <p className="text-gray-400 mt-1">{t('impact_analysis_desc')}</p>
+                <h1 className="text-3xl font-bold text-white">{title}</h1>
+                <p className="text-gray-400 mt-1">{description}</p>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
