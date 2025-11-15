@@ -696,6 +696,12 @@ const en = {
     "Low": "Low",
     "Medium": "Medium",
     "High": "High",
+    "feedback": "Feedback",
+    "feedback_submitted_successfully": "Feedback submitted successfully!",
+    "select_rectangle_to_provide_feedback": "Select rectangle to provide feedback",
+    "submit_feedback": "Submit Feedback",
+    "tell_us_what_you_think": "Tell us what you think",
+    "submit_your_suggestion": "Submit your suggestion...",
 };
 
 const tr = {
@@ -1395,6 +1401,12 @@ const tr = {
     "Low": "Düşük",
     "Medium": "Orta",
     "High": "Yüksek",
+    "feedback": "Geri Bildirim",
+    "feedback_submitted_successfully": "Geri bildirim başarıyla gönderildi!",
+    "select_rectangle_to_provide_feedback": "Geri bildirim sağlamak için bir dikdörtgen seçin",
+    "submit_feedback": "Geri Bildirim Gönder",
+    "tell_us_what_you_think": "Bize ne düşündüğünüzü söyleyin",
+    "submit_your_suggestion": "Önerinizi gönderin...",
 };
 
 export const translations = {

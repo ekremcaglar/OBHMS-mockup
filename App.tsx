@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 import AircraftDetailView from './components/AircraftDetailView';
@@ -34,6 +35,8 @@ import { useI18n } from './context/I18nContext';
 import Login from './components/Login';
 import Feedback from './components/Feedback';
 import FeedbackDashboard from './components/FeedbackDashboard';
+import { NotificationProvider } from './context/NotificationContext';
+import Notification from './components/Notification';
 
 interface SearchState {
     query: string;
@@ -43,7 +46,7 @@ interface SearchState {
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentPage, setCurrentPage] = useState('Home');
+  const navigate = useNavigate();
   const [selectedAircraftId, setSelectedAircraftId] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('System Engineering Lead');
   const [searchState, setSearchState] = useState<SearchState>({ query: '', result: '', isLoading: false });
@@ -70,7 +73,7 @@ const App: React.FC = () => {
     if (!query.trim()) return;
 
     setSearchState({ query, result: '', isLoading: true });
-    setCurrentPage('SearchResult');
+    navigate('/search');
 
     try {
         const result = await generateSearchResponse(query, MOCK_FLEET_DATA);
@@ -78,7 +81,7 @@ const App: React.FC = () => {
     } catch (error) {
         setSearchState({ query, result: 'An error occurred while fetching the response.', isLoading: false });
     }
-  }, []);
+  }, [navigate]);
 
   const selectedAircraft = useMemo(() => {
     if (!selectedAircraftId) return null;
@@ -95,98 +98,42 @@ const App: React.FC = () => {
       );
     }
 
-    if (ALL_SECTION_KEYS.includes(currentPage)) {
-      const i18nKeys = SECTION_I18N_KEYS.get(currentPage);
-      const isExistingPage = ['Analysis', 'Health Monitoring', 'Dashboards', 'Chart Builder', 'Reports', 'TCP'].includes(currentPage);
-      if (i18nKeys && !isExistingPage) {
-        if (currentPage === 'Root Cause Analysis') {
-            return <RootCauseAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
-        }
-        if (currentPage === 'Impact Analysis') {
-            return <ImpactAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
-        }
-        if (currentPage === 'System-of-Systems Context Analysis') {
-            return <SystemOfSystemsContextAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
-        }
-        return <PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
-      }
-    }
-
-    switch (currentPage) {
-        case 'Home':
-            return <Home 
-                setCurrentPage={setCurrentPage} 
-                onSearchSubmit={handleSearchSubmit} 
-                onAircraftSelect={handleAircraftSelect}
-            />;
-        case 'Dashboards':
-            return <Dashboards 
-                dashboards={dashboards}
-                setDashboards={setDashboards}
-                activeDashboardId={activeDashboardId}
-                setActiveDashboardId={setActiveDashboardId}
-                onAircraftSelect={handleAircraftSelect} 
-            />;
-        case 'Health':
-            return <Health onAircraftSelect={handleAircraftSelect} subPage={healthSubPage} />;
-        case 'Reports':
-            return <Reports />;
-        case 'Chart Builder':
-            return <ChartBuilder />;
-        case 'Analysis':
-            return <Analysis subPage={analysisSubPage} />;
-        case 'TCP':
-            return <TCPPage />;
-        case 'All':
-            return <All setCurrentPage={setCurrentPage} />;
-        case 'Help':
-            return <HelpPage />;
-        case 'UserRoles':
-            return <UserRolesPage />;
-        case 'Requirements':
-            return <SoftwareRequirementsPage />;
-        case 'HomeManual':
-            return <HomePageManualPage />;
-        case 'DashboardManual':
-            return <DashboardManualPage />;
-        case 'ChartBuilderManual':
-            return <ChartBuilderManualPage />;
-        case 'HealthMonitoringManual':
-            return <HealthMonitoringManualPage />;
-        case 'ReportsManual':
-            return <ReportsManualPage />;
-        case 'TCPManual':
-            return <TCPManualPage />;
-        case 'UISpecsManual':
-            return <UISpecsManualPage />;
-        case 'TopPanelManual':
-            return <TopPanelManualPage />;
-        case 'ArchitectureManual':
-            return <SoftwareArchitectureManualPage />;
-        case 'SearchResult':
-             return searchState.isLoading 
-                ? <div className="text-center text-gray-400 mt-20">{t('analyzing_data')}...</div>
-                : <SearchResult 
-                    query={searchState.query} 
-                    result={searchState.result} 
-                    onAircraftSelect={handleAircraftSelect}
-                    onBack={() => setCurrentPage('Home')}
-                />;
-        case 'Administration':
-             if (!ADMIN_ROLES.includes(userRole)) {
-                return (
-                    <div className="text-center mt-20">
-                        <h2 className="text-2xl font-bold text-red-400">{t('access_denied')}</h2>
-                        <p className="text-gray-400 mt-2">{t('access_denied_desc')}</p>
-                    </div>
-                );
+    return (
+      <Routes>
+        <Route path="/" element={<Home onSearchSubmit={handleSearchSubmit} onAircraftSelect={handleAircraftSelect} />} />
+        <Route path="/dashboards" element={<Dashboards dashboards={dashboards} setDashboards={setDashboards} activeDashboardId={activeDashboardId} setActiveDashboardId={setActiveDashboardId} onAircraftSelect={handleAircraftSelect} />} />
+        <Route path="/health" element={<Health onAircraftSelect={handleAircraftSelect} subPage={healthSubPage} />} />
+        <Route path="/reports" element={<Reports />} />
+        <Route path="/chart-builder" element={<ChartBuilder />} />
+        <Route path="/analysis" element={<Analysis subPage={analysisSubPage} />} />
+        <Route path="/tcp" element={<TCPPage />} />
+        <Route path="/all" element={<All />} />
+        <Route path="/help" element={<HelpPage />} />
+        <Route path="/user-roles" element={<UserRolesPage />} />
+        <Route path="/requirements" element={<SoftwareRequirementsPage />} />
+        <Route path="/home-manual" element={<HomePageManualPage />} />
+        <Route path="/dashboard-manual" element={<DashboardManualPage />} />
+        <Route path="/chart-builder-manual" element={<ChartBuilderManualPage />} />
+        <Route path="/health-monitoring-manual" element={<HealthMonitoringManualPage />} />
+        <Route path="/reports-manual" element={<ReportsManualPage />} />
+        <Route path="/tcp-manual" element={<TCPManualPage />} />
+        <Route path="/ui-specs-manual" element={<UISpecsManualPage />} />
+        <Route path="/top-panel-manual" element={<TopPanelManualPage />} />
+        <Route path="/architecture-manual" element={<SoftwareArchitectureManualPage />} />
+        <Route path="/search" element={searchState.isLoading ? <div className="text-center text-gray-400 mt-20">{t('analyzing_data')}...</div> : <SearchResult query={searchState.query} result={searchState.result} onAircraftSelect={handleAircraftSelect} onBack={() => navigate('/')} />} />
+        <Route path="/administration" element={!ADMIN_ROLES.includes(userRole) ? <div className="text-center mt-20"><h2 className="text-2xl font-bold text-red-400">{t('access_denied')}</h2><p className="text-gray-400 mt-2">{t('access_denied_desc')}</p></div> : <Administration />} />
+        <Route path="/feedback-dashboard" element={<FeedbackDashboard />} />
+        <Route path="/root-cause-analysis" element={<RootCauseAnalysis title={t('root_cause_analysis')} description={t('root_cause_analysis_desc')} />} />
+        <Route path="/impact-analysis" element={<ImpactAnalysis title={t('impact_analysis')} description={t('impact_analysis_desc')} />} />
+        {ALL_SECTION_KEYS.map(key => {
+            const i18nKeys = SECTION_I18N_KEYS.get(key);
+            if (i18nKeys) {
+                return <Route key={key} path={`/${key.toLowerCase().replace(/\s+/g, '-')}`} element={<PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />} />;
             }
-            return <Administration />;
-        case 'FeedbackDashboard':
-            return <FeedbackDashboard />;
-        default:
-            return <Home setCurrentPage={setCurrentPage} onSearchSubmit={handleSearchSubmit} onAircraftSelect={handleAircraftSelect} />;
-    }
+            return null;
+        })}
+      </Routes>
+    );
   };
 
 
@@ -197,8 +144,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#101827] font-sans">
         <Header 
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+            setCurrentPage={() => {}}
             setSelectedAircraftId={setSelectedAircraftId}
             userRole={userRole}
             setUserRole={setUserRole}

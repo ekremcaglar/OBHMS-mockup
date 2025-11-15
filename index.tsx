@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { I18nProvider } from './context/I18nContext';
 
@@ -11,8 +12,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <I18nProvider>
-      <App />
-    </I18nProvider>
+    <BrowserRouter>
+      <I18nProvider>
+        <App />
+      </I18nProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
