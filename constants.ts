@@ -681,16 +681,6 @@ export const HEATMAP_DATA = {
     ],
 };
 
-export const HEATMAP_DATA = {
-    labels: ['EGT', 'N1', 'Oil Press', 'Vibration'],
-    data: [
-      [1.00, 0.65, -0.32, 0.81],
-      [0.65, 1.00, -0.21, 0.75],
-      [-0.32, -0.21, 1.00, -0.40],
-      [0.81, 0.75, -0.40, 1.00],
-    ],
-};
-
 // New data for Structural Heatmap
 export const AIRFRAME_STRESS_HEATMAP_DATA = {
     labels: ['L-Wing Root', 'R-Wing Root', 'Fuselage-Fwd', 'Fuselage-Aft', 'Empennage'],
