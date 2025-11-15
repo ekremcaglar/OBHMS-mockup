@@ -26,6 +26,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     </div>
                     <p className="text-lg text-gray-400">{t('login_to_account')}</p>
                 </div>
+                {!import.meta.env.VITE_GEMINI_API_KEY && (
+                    <div className="bg-yellow-800/20 border border-yellow-700/50 text-yellow-300 text-sm rounded-lg p-4 text-center">
+                        <p className="font-bold">Demonstration Mode</p>
+                        <p>No API key found. The application is running with mock data.</p>
+                    </div>
+                )}
                 <form className="mt-8 space-y-6" onSubmit={handleLogin}>
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>

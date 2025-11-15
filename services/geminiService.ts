@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { FleetData } from '../types';
 
 export const generateFleetHealthSummary = async (data: FleetData): Promise<string> => {
-  if (!process.env.API_KEY) {
+  if (!import.meta.env.VITE_GEMINI_API_KEY) {
     console.warn("API_KEY is not set. Returning mock summary.");
     return new Promise(resolve => setTimeout(() => resolve(`
       **Fleet Status Summary:**
@@ -36,10 +36,10 @@ export const generateFleetHealthSummary = async (data: FleetData): Promise<strin
 
 
 export const generateSearchResponse = async (query: string, fleetData: FleetData): Promise<string> => {
-  if (!process.env.API_KEY) {
+  if (!import.meta.env.VITE_GEMINI_API_KEY) {
     console.warn("API_KEY is not set. Returning mock response.");
     return new Promise(resolve => setTimeout(() => resolve(`
-      Based on the current data, **KAAN-002** is **not mission capable** (0% MC Rate) and is currently in an AOG (Aircraft On Ground) state for 18 hours. The critical issue is related to its Propulsion system, specifically a low Remaining Useful Life (RUL) on a turbine blade. According to technical manual TM-KAAN-PROP-087, this requires an immediate Level 2 inspection.
+      Based on the current data, **KAAN-002** is **not mission capable** (0% MC Rate) and is currently in an AOG (Aircraft On Ground) state for 18 hours. The critical issue is related to its Propulsion system, a low Remaining Useful Life (RUL) on a turbine blade. According to technical manual TM-KAAN-PROP-087, this requires an immediate Level 2 inspection.
     `), 1000));
   }
 
