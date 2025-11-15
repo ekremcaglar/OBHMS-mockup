@@ -14,11 +14,14 @@ import PrognosticAnalysis from './analysis/PrognosticAnalysis';
 import AnomalyDetectionAnalysis from './analysis/AnomalyDetectionAnalysis';
 import ReliabilityAnalysis from './analysis/ReliabilityAnalysis';
 import StatisticalAnalysis from './analysis/StatisticalAnalysis';
+import SystemOfSystemsContext from './analysis/SystemOfSystemsContext';
 import EngineHealth from './health/EngineHealth';
+import PilotHealthMonitoringAnalysis from './analysis/PilotHealthMonitoringAnalysis';
 import { useI18n } from '../context/I18nContext';
 import { AnalysisSubPage } from '../types';
 import Icon from './Icon';
 import PlaceholderAnalysisPage from './analysis/PlaceholderAnalysisPage';
+import StructuralHealthManagementAnalysis from './analysis/StructuralHealthManagementAnalysis';
 
 interface AnalysisProps {
     subPage: AnalysisSubPage;
@@ -128,8 +131,14 @@ const Analysis: React.FC<AnalysisProps> = ({ subPage }) => {
                 return <ReliabilityAnalysis />;
             case 'Statistical Analysis':
                 return <StatisticalAnalysis />;
+            case 'System-of-Systems Context Analysis':
+                return <SystemOfSystemsContext />;
             case 'Engine Health Management Analysis':
                 return <EngineHealth onAircraftSelect={() => {}} />;
+            case 'Pilot Health Monitoring Analysis':
+                return <PilotHealthMonitoringAnalysis />;
+            case 'Structural Health Management Analysis':
+                return <StructuralHealthManagementAnalysis />;
             default:
                 const description = descriptions[subPage] || "Description not found for this analysis type.";
                 return <PlaceholderAnalysisPage title={getTitle()} description={description} />;

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useI18n } from '../context/I18nContext';
+import Icon from './Icon';
 
 declare const html2canvas: any;
 
@@ -66,6 +67,9 @@ const Feedback = () => {
     }
 
     try {
+      if (typeof html2canvas === 'undefined') {
+        return;
+      }
       const canvas = await html2canvas(document.body, {
         scrollX: -window.scrollX,
         scrollY: -window.scrollY,
@@ -156,7 +160,7 @@ const Feedback = () => {
         onClick={() => setState({ ...state, captureMode: true })}
         className="fixed bottom-4 right-4 bg-sky-600 text-white p-3 rounded-full shadow-lg hover:bg-sky-700 transition-colors z-50"
       >
-        {t('feedback')}
+        <Icon name="Sparkles" color="white" size={24} />
       </button>
       {state.captureMode && (
         <>

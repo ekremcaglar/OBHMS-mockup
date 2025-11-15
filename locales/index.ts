@@ -524,6 +524,12 @@ const en = {
   "manual_pilot_feature_3_desc": "A bar chart showing the calculated fatigue index over the pilot's last 10 flights, helping to monitor for cumulative fatigue.",
   "manual_pilot_feature_4_title": "Pilot Skills Assessment",
   "manual_pilot_feature_4_desc": "A radar chart that compares the individual pilot's skill ratings in key areas (e.g., Take-off, Combat Maneuvers) against the squadron average.",
+  "pilot_skills_assessment": "Pilot Skills Assessment",
+  "callsign": "Callsign",
+  "fatigue_trend_last_10": "Fatigue Trend (Last 10 Flights)",
+  "pilot_details_for": "Pilot Details For",
+  "cleared_for_flight": "Cleared for Flight",
+  "flight_no": "Flight #",
 
   "manual_reports_title": "Reports User Manual",
   "manual_reports_subtitle": "This guide explains how to generate, view, and print standardized and ad-hoc reports for analysis and briefing.",
@@ -696,6 +702,12 @@ const en = {
     "Low": "Low",
     "Medium": "Medium",
     "High": "High",
+    "feedback": "Feedback",
+    "feedback_submitted_successfully": "Feedback submitted successfully!",
+    "select_rectangle_to_provide_feedback": "Select rectangle to provide feedback",
+    "submit_feedback": "Submit Feedback",
+    "tell_us_what_you_think": "Tell us what you think",
+    "submit_your_suggestion": "Submit your suggestion...",
 };
 
 const tr = {
@@ -1223,6 +1235,12 @@ const tr = {
   "manual_pilot_feature_3_desc": "Pilotun son 10 uçuşundaki hesaplanmış yorgunluk endeksini gösteren bir çubuk grafik, kümülatif yorgunluğu izlemeye yardımcı olur.",
   "manual_pilot_feature_4_title": "Pilot Becerileri Değerlendirmesi",
   "manual_pilot_feature_4_desc": "Bireysel pilotun anahtar alanlardaki (ör. Kalkış, Savaş Manevraları) beceri derecelendirmelerini filo ortalamasına karşılaştıran bir radar grafiği.",
+  "pilot_skills_assessment": "Pilot Beceri Değerlendirmesi",
+  "callsign": "Çağrı Kodu",
+  "fatigue_trend_last_10": "Yorgunluk Trendi (Son 10 Uçuş)",
+  "pilot_details_for": "Pilot Detayları:",
+  "cleared_for_flight": "Uçuşa Elverişli",
+  "flight_no": "Uçuş #",
 
   "manual_reports_title": "Raporlar Kullanım Kılavuzu",
   "manual_reports_subtitle": "Bu kılavuz, analiz ve brifing için standartlaştırılmış ve anlık raporların nasıl oluşturulacağını, görüntüleneceğini ve yazdırılacağını açıklar.",
@@ -1395,6 +1413,12 @@ const tr = {
     "Low": "Düşük",
     "Medium": "Orta",
     "High": "Yüksek",
+    "feedback": "Geri Bildirim",
+    "feedback_submitted_successfully": "Geri bildirim başarıyla gönderildi!",
+    "select_rectangle_to_provide_feedback": "Geri bildirim sağlamak için bir dikdörtgen seçin",
+    "submit_feedback": "Geri Bildirim Gönder",
+    "tell_us_what_you_think": "Bize ne düşündüğünüzü söyleyin",
+    "submit_your_suggestion": "Önerinizi gönderin...",
 };
 
 export const translations = {
