@@ -102,7 +102,7 @@ const App: React.FC = () => {
             return <RootCauseAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
         }
         if (currentPage === 'Impact Analysis') {
-            return <ImpactAnalysis />;
+            return <ImpactAnalysis title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
         }
         return <PlaceholderAnalysisPage title={t(i18nKeys.titleKey as any)} description={t(i18nKeys.descriptionKey as any)} />;
       }

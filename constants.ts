@@ -937,6 +937,7 @@ export const PILLARS_DATA = [
       { key: 'Analysis', titleKey: 'section_analysis_title', descriptionKey: 'section_analysis_desc' },
       { key: 'Health Monitoring', titleKey: 'section_health_monitoring_title', descriptionKey: 'section_health_monitoring_desc' },
       { key: 'Root Cause Analysis', titleKey: 'root_cause_analysis', descriptionKey: 'root_cause_analysis_desc' },
+      { key: 'Impact Analysis', titleKey: 'impact_analysis', descriptionKey: 'impact_analysis_desc' },
       { key: 'Modeling & Algorithm Management', titleKey: 'section_modeling_management_title', descriptionKey: 'section_modeling_management_desc' },
       { key: 'Digital Twins & Simulation', titleKey: 'section_digital_twins_title', descriptionKey: 'section_digital_twins_desc' },
       { key: 'Custom Feature Builder', titleKey: 'section_feature_builder_title', descriptionKey: 'section_feature_builder_desc' },
