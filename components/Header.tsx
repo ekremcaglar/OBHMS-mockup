@@ -111,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Reliability Analysis')}>{t('reliability_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Operational Analysis')}>{t('operational_analysis')}</MegaMenuItem>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('System-of-Systems Context Analysis')}>{t('system_of_systems_context_analysis')}</MegaMenuItem>
-                                        <MegaMenuItem onClick={() => handleAnalysisNav('Impact Analysis')}>{t('impact_analysis')}</MegaMenuItem>
+                                        <MegaMenuItem onClick={() => setCurrentPage('Impact Analysis')}>{t('impact_analysis')}</MegaMenuItem>
                                     </MegaMenuColumn>
                                     <MegaMenuColumn title={t('core_methods')}>
                                         <MegaMenuItem onClick={() => handleAnalysisNav('Time-Series Analysis')}>{t('time_series_analysis')}</MegaMenuItem>
@@ -144,6 +144,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage, setSelecte
                             <NavItem label={t('reports')} page="Reports" currentPage={currentPage} onClick={() => handleNav('Reports')} />
                             <NavItem label="TCP" page="TCP" currentPage={currentPage} onClick={() => handleNav('TCP')} />
                             <NavItem label={t('all')} page="All" currentPage={currentPage} onClick={() => handleNav('All')} />
+                            <NavItem label="Feedback" page="FeedbackDashboard" currentPage={currentPage} onClick={() => handleNav('FeedbackDashboard')} />
                             {ADMIN_ROLES.includes(userRole) && <NavItem label={t('administration')} page="Administration" currentPage={currentPage} onClick={() => handleNav('Administration')} />}
                         </nav>
                     </div>

@@ -84,9 +84,20 @@ const kaanHours: Metric = {
     status: 'nominal',
 };
 
+const missionSuccessLikelihood: Metric = {
+    id: 'mission-success-likelihood',
+    title: 'Mission Success Likelihood',
+    description: 'Predicted likelihood of mission success based on current aircraft health and operational parameters.',
+    value: '95',
+    unit: '%',
+    status: 'nominal',
+    trend: 'up',
+};
+
 
 export const METRICS_MAP = new Map<string, Metric>([
   ['mc-rate', missionCapableRate],
+  ['mission-success-likelihood', missionSuccessLikelihood],
   ['fleet-availability', fleetAvailability],
   ['nff-rate', nffRate],
   ['aog-events', aogEvents],
@@ -206,6 +217,21 @@ export const SHI_TREND_DATA = [
   { week: 'W-2', shi: 89.9 },
   { week: 'W-1', shi: 88.7 },
 ];
+
+export const OPERATIONAL_FORECAST_DATA = {
+    'engine-temp': Array.from({ length: 12 }, (_, i) => ({
+        month: `M+${i + 1}`,
+        forecast: 870 + Math.random() * 20 - 10,
+        upperBound: 890 + Math.random() * 5,
+        lowerBound: 850 - Math.random() * 5,
+    })),
+    'hydraulic-pressure': Array.from({ length: 12 }, (_, i) => ({
+        month: `M+${i + 1}`,
+        forecast: 3000 + Math.random() * 100 - 50,
+        upperBound: 3100 + Math.random() * 20,
+        lowerBound: 2900 - Math.random() * 20,
+    })),
+};
 
 // Initial App State Data
 export const INITIAL_DASHBOARDS: Dashboard[] = [
@@ -526,36 +552,165 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
 };
 
 export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
+
     'fl-2': {
+
         symptoms: [
+
             "Hydraulic Pressure Warning Light On",
+
             "Slow landing gear deployment reported by pilot",
+
             "Telemetry shows pressure drop in port-side hydraulic line during high-G maneuvers"
+
         ],
+
         probableCauses: [
+
             {
+
                 component: "Hydraulic Line P-78B",
-                reasoning: "Stress analysis indicates this line is prone to fatigue cracks. Recent flight profiles involved high stress.",
+
+rationale: "Stress analysis indicates this line is prone to fatigue cracks. Recent flight profiles involved high stress.",
+
                 probability: 0.75,
+
                 source: "Physics-Based Model"
+
             },
+
             {
+
                 component: "Reservoir Pressure Sensor",
-                reasoning: "Sensor has a history of intermittent failures across the fleet. Could be a false positive.",
+
+                                reasoning: "Sensor has a history of intermittent failures across the fleet. Could be a false positive.",
+
                 probability: 0.20,
+
                 source: "Historical Data"
+
             },
+
             {
+
                 component: "Hydraulic Pump Assembly",
-                reasoning: "Pump is nearing its scheduled maintenance interval, but shows no other signs of degradation.",
+
+                rationale: "Pump is nearing its scheduled maintenance interval, but shows no other signs of degradation.",
+
                 probability: 0.05,
+
                 source: "Maintenance Records"
+
             }
+
         ]
+
     }
+
 };
 
+
+
+export const MOCK_FAULT_ISOLATION_ANALYSIS: { [key: string]: any } = {
+
+    'fl-2': { // Corresponds to the 'Reservoir Pressure Low - Port' fault
+
+        recommendedLRUs: [
+
+            {
+
+                lruName: "Port Hydraulic Manifold",
+
+                partNumber: "HM-P-45C",
+
+                confidence: 0.85,
+
+                rationale: "Directly manages port-side hydraulic pressure and telemetry data originates from this unit.",
+
+                recommendedAction: "Perform functional check on all valves and sensors attached to this manifold. Check for internal leaks.",
+
+                potentialPLRUs: [
+
+                    {
+
+                        plruName: "Pressure Transducer #2",
+
+                        partNumber: "HM-P-45C-S2",
+
+                        confidence: 0.92,
+
+                        rationale: "This specific transducer is responsible for the pressure reading that triggered the fault.",
+
+                        toolsRequired: ["Digital Multimeter", "Pressure Gauge (0-5000 PSI)"],
+
+                        skillLevel: "Intermediate",
+
+                    },
+
+                    {
+
+                        plruName: "Solenoid Valve SV-3",
+
+                        partNumber: "HM-P-45C-V3",
+
+                        confidence: 0.45,
+
+                        rationale: "A stuck or slow-acting valve could cause a temporary pressure drop under load.",
+
+                        toolsRequired: ["Wrench Set", "Lockwire Pliers"],
+
+                        skillLevel: "Beginner",
+
+                    }
+
+                ]
+
+            },
+
+            {
+
+                lruName: "Main Hydraulic Pump Assembly",
+
+                partNumber: "MHP-01A",
+
+                confidence: 0.15,
+
+                rationale: "Less likely, as a pump failure would typically affect both port and starboard systems. However, a partial failure is possible.",
+
+                recommendedAction: "Monitor pump output pressure during system stress test. Listen for unusual acoustic signatures.",
+
+                potentialPLRUs: [
+
+                     {
+
+                        plruName: "Pump Internal Regulator",
+
+                        partNumber: "MHP-01A-R1",
+
+                        confidence: 0.30,
+
+                        rationale: "Internal regulation issues could cause pressure drops on one side.",
+
+                        toolsRequired: ["Hydraulic Test Stand"],
+
+                        skillLevel: "Advanced",
+
+                    }
+
+                ]
+
+            }
+
+        ]
+
+    }
+
+};
+
+
+
 // Home Page Data
+
 export const SHORTCUTS_DATA: Shortcut[] = [
     { id: 'sc-1', title: 'Dashboards', icon: 'LayoutDashboard', targetApp: 'Dashboards' },
     { id: 'sc-2', title: 'Health Monitoring', icon: 'HeartPulse', targetApp: 'Health' },
@@ -781,7 +936,7 @@ export const PILLARS_DATA = [
     sections: [
       { key: 'Analysis', titleKey: 'section_analysis_title', descriptionKey: 'section_analysis_desc' },
       { key: 'Health Monitoring', titleKey: 'section_health_monitoring_title', descriptionKey: 'section_health_monitoring_desc' },
-      { key: 'RCA Workbench', titleKey: 'section_rca_workbench_title', descriptionKey: 'section_rca_workbench_desc' },
+      { key: 'Root Cause Analysis', titleKey: 'root_cause_analysis', descriptionKey: 'root_cause_analysis_desc' },
       { key: 'Modeling & Algorithm Management', titleKey: 'section_modeling_management_title', descriptionKey: 'section_modeling_management_desc' },
       { key: 'Digital Twins & Simulation', titleKey: 'section_digital_twins_title', descriptionKey: 'section_digital_twins_desc' },
       { key: 'Custom Feature Builder', titleKey: 'section_feature_builder_title', descriptionKey: 'section_feature_builder_desc' },
@@ -809,6 +964,13 @@ export const PILLARS_DATA = [
       { key: 'Cybersecurity Threat Assessment', titleKey: 'section_cybersecurity_title', descriptionKey: 'section_cybersecurity_desc' },
       { key: 'Software Updates & Patch Management', titleKey: 'section_software_updates_title', descriptionKey: 'section_software_updates_desc' },
       { key: 'Data Governance Rules Engine', titleKey: 'section_data_governance_title', descriptionKey: 'section_data_governance_desc' },
+      { key: 'Alerts & Notifications Center', titleKey: 'section_alerts_notifications_title', descriptionKey: 'section_alerts_notifications_desc' },
+      { key: 'Offline Mode Management', titleKey: 'section_offline_mode_title', descriptionKey: 'section_offline_mode_desc' },
+      { key: 'Change Management & Versioning', titleKey: 'section_change_management_title', descriptionKey: 'section_change_management_desc' },
+      { key: 'Multi-Language Support & Localization', titleKey: 'section_multi_language_title', descriptionKey: 'section_multi_language_desc' },
+      { key: 'User Behavior Analytics', titleKey: 'section_user_behavior_analytics_title', descriptionKey: 'section_user_behavior_analytics_desc' },
+      { key: 'Data Export/Import Utility', titleKey: 'section_data_export_import_title', descriptionKey: 'section_data_export_import_desc' },
+      { key: 'User Personalization & Customization', titleKey: 'section_user_personalization_title', descriptionKey: 'section_user_personalization_desc' },
     ]
   },
   {
@@ -846,6 +1008,133 @@ export const PILLARS_DATA = [
     ]
   }
 ];
+
+export const MOCK_RELIABILITY_DATA = {
+  mtbf: 500,
+  mttr: 5,
+  systems: [
+    { name: 'Avionics', mtbf: 600, mttr: 4, availability: 99.3 },
+    { name: 'Propulsion', mtbf: 400, mttr: 8, availability: 98.0 },
+    { name: 'Hydraulics', mtbf: 800, mttr: 3, availability: 99.6 },
+    { name: 'Airframe', mtbf: 1200, mttr: 2, availability: 99.8 },
+  ],
+};
+
+export const MOCK_IMPACT_ANALYSIS_DATA = {
+    missionCapability: {
+        data: [
+            { name: 'Overall Mission Capability', current: 85, projected: 70, fullMark: 100 },
+            { name: 'Projected Mission Capability', current: 70, projected: 50, fullMark: 100 },
+            { name: 'Time to Full Capability', current: 100, projected: 120, fullMark: 150 },
+        ],
+        metrics: [
+            { name: 'overall_mission_capability', value: '85', unit: '%' },
+            { name: 'projected_mission_capability', value: '70', unit: '%' },
+            { name: 'time_to_full_capability', value: '120', unit: 'hrs' },
+        ],
+    },
+    costSchedule: {
+        data: [
+            { name: 'Estimated Cost Increase', value: 15 },
+            { name: 'Projected Maintenance Hrs', value: 200 },
+            { name: 'Schedule Delay', value: 10 },
+        ],
+        summary: [
+            { name: 'estimated_cost_increase', value: '15%' },
+            { name: 'projected_maintenance_hrs', value: '200 hrs' },
+            { name: 'schedule_delay', value: '10 days' },
+        ],
+    },
+    safetyRisk: {
+        data: [
+            { name: 'Low', value: 60, color: '#82ca9d' },
+            { name: 'Medium', value: 30, color: '#ffc658' },
+            { name: 'High', value: 10, color: '#ff8042' },
+        ],
+        factors: [
+            { name: 'in_flight_system_failure', status: 'critical' },
+            { name: 'ground_crew_safety', status: 'warning' },
+            { name: 'collateral_damage_risk', status: 'nominal' },
+        ],
+    },
+};
+
+export const CROSS_AIRCRAFT_TREND_DATA = {
+  comparisonData: [
+    ...RADAR_CHART_DATA,
+  ],
+};
+
+export const MOCK_SYSTEM_DATA = [
+    { id: 'fcs', name: 'Flight Control System', x: 100, y: 100, connections: ['avionics', 'hydraulics'] },
+    { id: 'avionics', name: 'Avionics', x: 300, y: 100, connections: ['fcs', 'power'] },
+    { id: 'hydraulics', name: 'Hydraulics', x: 100, y: 300, connections: ['fcs', 'power'] },
+    { id: 'power', name: 'Power System', x: 300, y: 300, connections: ['avionics', 'hydraulics'] },
+];
+
+export const MOCK_FAULT_TREE_DATA = {
+  name: 'Top Event: Engine Failure',
+  attributes: {
+    probability: '0.01%',
+  },
+  children: [
+    {
+      name: 'OR Gate',
+      children: [
+        {
+          name: 'Mechanical Failure',
+          attributes: {
+            probability: '0.05%',
+          },
+          children: [
+            {
+              name: 'AND Gate',
+              children: [
+                {
+                  name: 'Component A Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+                {
+                  name: 'Component B Failure',
+                  attributes: {
+                    probability: '0.5%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Electrical Failure',
+          attributes: {
+            probability: '0.02%',
+          },
+          children: [
+            {
+              name: 'OR Gate',
+              children: [
+                {
+                  name: 'Sensor Failure',
+                  attributes: {
+                    probability: '0.2%',
+                  },
+                },
+                {
+                  name: 'Power Supply Failure',
+                  attributes: {
+                    probability: '0.1%',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
 
@@ -891,45 +1180,3 @@ export const REQUIREMENTS_DATA = [
     ]
   }
 ];
-
-export const MOCK_IMPACT_ANALYSIS_DATA = {
-  missionCapability: {
-      data: [
-          { name: 'Sortie Rate', current: 85, projected: 70, fullMark: 100 },
-          { name: 'Weapon Release', current: 95, projected: 80, fullMark: 100 },
-          { name: 'Targeting Pod', current: 92, projected: 85, fullMark: 100 },
-          { name: 'EW Suite', current: 88, projected: 75, fullMark: 100 },
-          { name: 'Comms', current: 98, projected: 90, fullMark: 100 },
-      ],
-      metrics: [
-          { name: 'overall_mission_capability', value: 91.6, unit: '%' },
-          { name: 'projected_mission_capability', value: 80, unit: '%' },
-          { name: 'time_to_full_capability', value: 48, unit: ' hours' },
-      ],
-  },
-  costSchedule: {
-      data: [
-          { name: 'Parts', value: 15 },
-          { name: 'Labor', value: 25 },
-          { name: 'Logistics', value: 10 },
-          { name: 'Downtime', value: 30 },
-      ],
-      summary: [
-          { name: 'estimated_cost_increase', value: '$75,000' },
-          { name: 'projected_maintenance_hrs', value: '120' },
-          { name: 'schedule_delay', value: '3 days' },
-      ],
-  },
-  safetyRisk: {
-      data: [
-          { name: 'Low', value: 60, color: '#22c55e' },
-          { name: 'Medium', value: 30, color: '#f59e0b' },
-          { name: 'High', value: 10, color: '#ef4444' },
-      ],
-      factors: [
-          { name: 'in_flight_system_failure', status: 'critical' },
-          { name: 'ground_crew_safety', status: 'warning' },
-          { name: 'collateral_damage_risk', status: 'nominal' },
-      ],
-  },
-};
