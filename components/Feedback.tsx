@@ -67,6 +67,9 @@ const Feedback = () => {
     }
 
     try {
+      if (typeof html2canvas === 'undefined') {
+        return;
+      }
       const canvas = await html2canvas(document.body, {
         scrollX: -window.scrollX,
         scrollY: -window.scrollY,
