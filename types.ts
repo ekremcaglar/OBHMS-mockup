@@ -202,3 +202,11 @@ export interface TCP {
   author: string;
   createdDate: string;
 }
+
+export interface SystemNode {
+    id: string;
+    name: string;
+    x: number;
+    y: number;
+    connections: string[];
+}

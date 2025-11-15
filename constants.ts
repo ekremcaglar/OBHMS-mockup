@@ -207,21 +207,6 @@ export const SHI_TREND_DATA = [
   { week: 'W-1', shi: 88.7 },
 ];
 
-export const OPERATIONAL_FORECAST_DATA = {
-  'engine-temp': Array.from({ length: 12 }, (_, i) => ({
-    month: `M+${i + 1}`,
-    forecast: 950 + Math.random() * 50 - 25,
-    upperBound: 980 + Math.random() * 20 - 10,
-    lowerBound: 920 + Math.random() * 20 - 10,
-  })),
-  'hydraulic-pressure': Array.from({ length: 12 }, (_, i) => ({
-    month: `M+${i + 1}`,
-    forecast: 3000 + Math.random() * 100 - 50,
-    upperBound: 3100 + Math.random() * 50 - 25,
-    lowerBound: 2900 + Math.random() * 50 - 25,
-  })),
-};
-
 // Initial App State Data
 export const INITIAL_DASHBOARDS: Dashboard[] = [
     {
@@ -342,6 +327,59 @@ export const INITIAL_DASHBOARDS: Dashboard[] = [
             { id: 't-46', type: 'ai_summary', gridSpan: 12 },
             { id: 't-47', type: 'area_chart', title: 'Custom Area Chart', gridSpan: 12 },
         ]
+    },
+    {
+        id: 'engine-vibration-fft',
+        name: 'Engine Vibration FFT',
+        description: 'Frequency domain analysis of engine vibration data.',
+        icon: 'WaveSquare',
+        fields: [
+            { id: 'frequency', name: 'Frequency (Hz)', type: 'category' },
+            { id: 'amplitude', name: 'Amplitude', type: 'value' },
+        ]
+    },
+    {
+        id: 'failure-trend-data',
+        name: 'Failure Trend Over Time',
+        description: 'Monthly failure counts for a specific component.',
+        icon: 'TrendingUp',
+        fields: [
+            { id: 'month', name: 'Month', type: 'category' },
+            { id: 'failures', name: 'Failures', type: 'value' },
+        ]
+    },
+    {
+        id: 'data-processing-pipeline',
+        name: 'Data Processing Pipeline',
+        description: 'Volume of data at each stage of the processing pipeline.',
+        icon: 'Database',
+        fields: [
+            { id: 'stage', name: 'Stage', type: 'category' },
+            { id: 'dataVolume', name: 'Data Volume (GB)', type: 'value' },
+        ]
+    },
+    {
+        id: 'feature-engineering-data',
+        name: 'Engine Feature Correlation',
+        description: 'Correlation between different engineered features from engine data.',
+        icon: 'Cpu',
+        fields: [
+            { id: 'vibrationRms', name: 'Vibration (RMS)', type: 'value' },
+            { id: 'peakToPeak', name: 'Peak-to-Peak', type: 'value' },
+            { id: 'kurtosis', name: 'Kurtosis', type: 'value' },
+            { id: 'crestFactor', name: 'Crest Factor', type: 'value' },
+        ]
+    },
+    {
+        id: 'transient-event-data',
+        name: 'Landing Gear Transient Event',
+        description: 'High-frequency data captured during a landing gear deployment event.',
+        icon: 'Zap',
+        fields: [
+            { id: 'time', name: 'Time (ms)', type: 'value' },
+            { id: 'amplitude', name: 'Amplitude', type: 'value' },
+            { id: 'baseline', name: 'Baseline', type: 'value' },
+        ]
     }
 ];
 
@@ -448,7 +486,73 @@ export const MOCK_CHART_DATA: { [key: string]: any[] } = {
       { subject: 'Propulsion', 'KAAN-001': 97, 'KAAN-002': 45, 'KAAN-003': 94, 'KAAN-004': 98 },
       { subject: 'Hydraulics', 'KAAN-001': 85, 'KAAN-002': 92, 'KAAN-003': 78, 'KAAN-004': 99 },
       { subject: 'Airframe', 'KAAN-001': 99, 'KAAN-002': 98, 'KAAN-003': 88, 'KAAN-004': 100 },
-    ]
+    ],
+    'engine-vibration-fft': Array.from({ length: 50 }, (_, i) => ({
+        frequency: i * 10,
+        amplitude: Math.random() * (i === 20 ? 5 : 1),
+    })),
+    'failure-trend-data': [
+        { month: 'Jan', failures: 2 },
+        { month: 'Feb', failures: 3 },
+        { month: 'Mar', failures: 2 },
+        { month: 'Apr', failures: 4 },
+        { month: 'May', failures: 5 },
+        { month: 'Jun', failures: 4 },
+        { month: 'Jul', failures: 6 },
+        { month: 'Aug', failures: 5 },
+    ],
+    'data-processing-pipeline': [
+        { stage: 'Ingest', dataVolume: 500 },
+        { stage: 'Clean', dataVolume: 450 },
+        { stage: 'Validate', dataVolume: 440 },
+        { stage: 'Align', dataVolume: 420 },
+        { stage: 'Standardize', dataVolume: 410 },
+        { stage: 'Store', dataVolume: 400 },
+    ],
+    'feature-engineering-data': Array.from({ length: 50 }, () => ({
+        vibrationRms: Math.random() * 2,
+        peakToPeak: Math.random() * 5,
+        kurtosis: 3 + Math.random() * 2,
+        crestFactor: 1.5 + Math.random(),
+    })),
+    'transient-event-data': Array.from({ length: 100 }, (_, i) => {
+        const baseline = 1 + Math.sin(i / 10) * 0.2;
+        let amplitude = baseline + (Math.random() - 0.5) * 0.1;
+        if (i > 40 && i < 50) {
+            amplitude += Math.sin((i - 40) * Math.PI / 10) * 3;
+        }
+        return { time: i * 2, amplitude, baseline };
+    }),
+};
+
+export const MOCK_DIAGNOSTIC_ANALYSIS: { [key: string]: any } = {
+    'fl-2': {
+        symptoms: [
+            "Hydraulic Pressure Warning Light On",
+            "Slow landing gear deployment reported by pilot",
+            "Telemetry shows pressure drop in port-side hydraulic line during high-G maneuvers"
+        ],
+        probableCauses: [
+            {
+                component: "Hydraulic Line P-78B",
+                reasoning: "Stress analysis indicates this line is prone to fatigue cracks. Recent flight profiles involved high stress.",
+                probability: 0.75,
+                source: "Physics-Based Model"
+            },
+            {
+                component: "Reservoir Pressure Sensor",
+                reasoning: "Sensor has a history of intermittent failures across the fleet. Could be a false positive.",
+                probability: 0.20,
+                source: "Historical Data"
+            },
+            {
+                component: "Hydraulic Pump Assembly",
+                reasoning: "Pump is nearing its scheduled maintenance interval, but shows no other signs of degradation.",
+                probability: 0.05,
+                source: "Maintenance Records"
+            }
+        ]
+    }
 };
 
 // Home Page Data
@@ -624,7 +728,6 @@ export const MOCK_FAULT_LOGS = [
   { id: 'fl-5', timestamp: '2023-10-24 16:45', aircraft: 'KAAN-002', system: 'Propulsion', code: 'P0301', description: 'Cylinder 1 Misfire Detected', severity: 'High' },
   { id: 'fl-6', timestamp: '2023-10-23 09:05', aircraft: 'KAAN-004', system: 'ECS', code: 'E1005', description: 'Cabin Pressure Sensor Drift', severity: 'Low' },
 ];
-
 export const ADMIN_ROLES: UserRole[] = [
   'OBHMS Administrator / System Owner',
   'Security Officer',
@@ -706,6 +809,13 @@ export const PILLARS_DATA = [
       { key: 'Cybersecurity Threat Assessment', titleKey: 'section_cybersecurity_title', descriptionKey: 'section_cybersecurity_desc' },
       { key: 'Software Updates & Patch Management', titleKey: 'section_software_updates_title', descriptionKey: 'section_software_updates_desc' },
       { key: 'Data Governance Rules Engine', titleKey: 'section_data_governance_title', descriptionKey: 'section_data_governance_desc' },
+      { key: 'Alerts & Notifications Center', titleKey: 'section_alerts_notifications_title', descriptionKey: 'section_alerts_notifications_desc' },
+      { key: 'Offline Mode Management', titleKey: 'section_offline_mode_title', descriptionKey: 'section_offline_mode_desc' },
+      { key: 'Change Management & Versioning', titleKey: 'section_change_management_title', descriptionKey: 'section_change_management_desc' },
+      { key: 'Multi-Language Support & Localization', titleKey: 'section_multi_language_title', descriptionKey: 'section_multi_language_desc' },
+      { key: 'User Behavior Analytics', titleKey: 'section_user_behavior_analytics_title', descriptionKey: 'section_user_behavior_analytics_desc' },
+      { key: 'Data Export/Import Utility', titleKey: 'section_data_export_import_title', descriptionKey: 'section_data_export_import_desc' },
+      { key: 'User Personalization & Customization', titleKey: 'section_user_personalization_title', descriptionKey: 'section_user_personalization_desc' },
     ]
   },
   {
@@ -744,65 +854,11 @@ export const PILLARS_DATA = [
   }
 ];
 
-export const MOCK_CROSS_AIRCRAFT_ANOMALY_DATA = [
-    {
-      anomalyId: 'ANOM-001',
-      description: 'Intermittent Hydraulic Pressure Drops in Port-side Line',
-      suspectedSystem: 'Hydraulics',
-      potentialImpact: 'Reduced control surface effectiveness during high-G maneuvers.',
-      fleetPrevalence: 0.75,
-      affectedAircraft: [
-        {
-          tailNumber: 'KAAN-001',
-          firstOccurrence: '2023-10-20',
-          relatedFaults: ['H5501'],
-          sensorReadings: {
-            'Pressure Sensor HP-P-01A': 'Fluctuating between 2800-3000 PSI',
-          },
-        },
-        {
-          tailNumber: 'KAAN-003',
-          firstOccurrence: '2023-10-26',
-          relatedFaults: ['H5501', 'H5510'],
-           sensorReadings: {
-            'Pressure Sensor HP-P-01A': 'Average pressure 2850 PSI, below norm',
-          },
-        },
-         {
-          tailNumber: 'KAAN-004',
-          firstOccurrence: '2023-11-02',
-          relatedFaults: [],
-           sensorReadings: {
-            'Pressure Sensor HP-P-01A': 'Observed transient drops to 2700 PSI',
-          },
-        },
-      ],
-    },
-    {
-      anomalyId: 'ANOM-002',
-      description: 'EGT (Exhaust Gas Temperature) Spikes on Engine #2',
-      suspectedSystem: 'Propulsion',
-      potentialImpact: 'Indicates potential hot section degradation, could lead to premature engine failure.',
-      fleetPrevalence: 0.5,
-      affectedAircraft: [
-        {
-          tailNumber: 'KAAN-002',
-          firstOccurrence: '2023-10-18',
-          relatedFaults: ['P0420'],
-          sensorReadings: {
-            'EGT Sensor E2-T48': 'Spikes up to +15°C above baseline',
-          },
-        },
-        {
-          tailNumber: 'KAAN-003',
-          firstOccurrence: '2023-11-01',
-          relatedFaults: [],
-          sensorReadings: {
-            'EGT Sensor E2-T48': 'Spikes up to +10°C above baseline during climb',
-          },
-        },
-      ],
-    }
+export const MOCK_SYSTEM_DATA = [
+    { id: 'fcs', name: 'Flight Control System', x: 100, y: 100, connections: ['avionics', 'hydraulics'] },
+    { id: 'avionics', name: 'Avionics', x: 300, y: 100, connections: ['fcs', 'power'] },
+    { id: 'hydraulics', name: 'Hydraulics', x: 100, y: 300, connections: ['fcs', 'power'] },
+    { id: 'power', name: 'Power System', x: 300, y: 300, connections: ['avionics', 'hydraulics'] },
 ];
 
 export const ALL_SECTION_KEYS = PILLARS_DATA.flatMap(p => p.sections.map(s => s.key));
@@ -849,45 +905,3 @@ export const REQUIREMENTS_DATA = [
     ]
   }
 ];
-
-export const MOCK_IMPACT_ANALYSIS_DATA = {
-  missionCapability: {
-      data: [
-          { name: 'Sortie Rate', current: 85, projected: 70, fullMark: 100 },
-          { name: 'Weapon Release', current: 95, projected: 80, fullMark: 100 },
-          { name: 'Targeting Pod', current: 92, projected: 85, fullMark: 100 },
-          { name: 'EW Suite', current: 88, projected: 75, fullMark: 100 },
-          { name: 'Comms', current: 98, projected: 90, fullMark: 100 },
-      ],
-      metrics: [
-          { name: 'overall_mission_capability', value: 91.6, unit: '%' },
-          { name: 'projected_mission_capability', value: 80, unit: '%' },
-          { name: 'time_to_full_capability', value: 48, unit: ' hours' },
-      ],
-  },
-  costSchedule: {
-      data: [
-          { name: 'Parts', value: 15 },
-          { name: 'Labor', value: 25 },
-          { name: 'Logistics', value: 10 },
-          { name: 'Downtime', value: 30 },
-      ],
-      summary: [
-          { name: 'estimated_cost_increase', value: '$75,000' },
-          { name: 'projected_maintenance_hrs', value: '120' },
-          { name: 'schedule_delay', value: '3 days' },
-      ],
-  },
-  safetyRisk: {
-      data: [
-          { name: 'Low', value: 60, color: '#22c55e' },
-          { name: 'Medium', value: 30, color: '#f59e0b' },
-          { name: 'High', value: 10, color: '#ef4444' },
-      ],
-      factors: [
-          { name: 'in_flight_system_failure', status: 'critical' },
-          { name: 'ground_crew_safety', status: 'warning' },
-          { name: 'collateral_damage_risk', status: 'nominal' },
-      ],
-  },
-};
