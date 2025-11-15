@@ -32,6 +32,7 @@ import { useI18n } from './context/I18nContext';
 import Login from './components/Login';
 import Feedback from './components/Feedback';
 import FeedbackDashboard from './components/FeedbackDashboard';
+import Acknowledge from './components/Acknowledge';
 
 interface SearchState {
     query: string;
@@ -41,6 +42,7 @@ interface SearchState {
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasAcknowledged, setHasAcknowledged] = useState(false);
   const [currentPage, setCurrentPage] = useState('Home');
   const [selectedAircraftId, setSelectedAircraftId] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('System Engineering Lead');
@@ -183,6 +185,9 @@ const App: React.FC = () => {
 
 
   if (!isAuthenticated) {
+    if (!process.env.API_KEY && !hasAcknowledged) {
+      return <Acknowledge onAcknowledge={() => setHasAcknowledged(true)} />;
+    }
     return <Login onLogin={handleLogin} />;
   }
 
